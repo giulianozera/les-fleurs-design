@@ -67,6 +67,22 @@ export const product = defineType({
       type: 'array',
       of: [{ type: 'reference', to: [{ type: 'potOption' }] }],
     }),
+    defineField({
+      name: 'colorVariants',
+      title: 'Color Variant Products',
+      description: 'Link each color to its own dedicated product page.',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'color', title: 'Color', type: 'reference', to: [{ type: 'colorOption' }] }),
+            defineField({ name: 'product', title: 'Product', type: 'reference', to: [{ type: 'product' }] }),
+          ],
+          preview: { select: { title: 'color.name', subtitle: 'product.title' } },
+        },
+      ],
+    }),
 
     // ── Taxonomy ──────────────────────────────────────────────────────────────
     defineField({

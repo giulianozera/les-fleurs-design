@@ -8,6 +8,7 @@ import { ProductCard } from '@/components/shop/ProductCard';
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ color?: string }>;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -20,8 +21,9 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   };
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function ProductPage({ params, searchParams }: ProductPageProps) {
   const { slug } = await params;
+  const { color } = await searchParams;
   const product = await getProductBySlug(slug);
 
   if (!product) notFound();
@@ -41,7 +43,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
 
           {/* Right: Product info + options */}
-          <ProductOptions product={product} />
+          <ProductOptions product={product} initialColorSlug={color} />
         </div>
       </div>
 

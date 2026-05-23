@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
@@ -10,15 +9,13 @@ const cards = [
     id: 'for-her',
     title: 'For Her',
     body: 'A bloom that outlasts the moment.',
-    image: 'https://placehold.co/600x750/EDE6DA/0F0F0F?text=.',
     href: '/shop',
     cta: 'Shop Gifts',
   },
   {
     id: 'for-hospitality',
     title: 'For Hospitality',
-    body: 'Lobbies, suites, dining rooms. A signature that doesn’t wilt.',
-    image: 'https://placehold.co/600x750/D4CEC6/0F0F0F?text=.',
+    body: "Lobbies, suites, dining rooms. A signature that doesn't wilt.",
     href: '/wholesale',
     cta: 'Partner With Us',
   },
@@ -26,7 +23,6 @@ const cards = [
     id: 'for-retail',
     title: 'For Retail & Interiors',
     body: 'An object of design, available at wholesale.',
-    image: 'https://placehold.co/600x750/C8C0B4/0F0F0F?text=.',
     href: '/wholesale',
     cta: 'Wholesale Inquiry',
   },
@@ -80,14 +76,8 @@ export function BeyondTheGift() {
           <motion.div key={card.id} variants={fadeUp}>
             <Link href={card.href} className="group block">
               {/* 4:5 portrait image */}
-              <div className="relative w-full overflow-hidden bg-ivory-dark" style={{ aspectRatio: '4/5' }}>
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
+              <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
+                <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
               </div>
 
               {/* Caption */}

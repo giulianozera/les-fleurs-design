@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
@@ -10,19 +9,16 @@ const collections = [
     slug: 'eternal-edit',
     title: 'The Eternal Edit',
     description: 'Our most sought-after arrangements. Timeless forms, enduring beauty.',
-    image: 'https://placehold.co/800x1000/EDE6DA/0F0F0F?text=.',
   },
   {
     slug: 'maison',
     title: 'Maison Collection',
     description: 'Architectural vessels. Roses selected for their quietude.',
-    image: 'https://placehold.co/800x1000/D4CEC6/0F0F0F?text=.',
   },
   {
     slug: 'signature',
     title: 'The Signature Series',
     description: 'Our signature hand-formed ceramics. One-of-a-kind, never repeated.',
-    image: 'https://placehold.co/800x1000/C8C0B4/0F0F0F?text=.',
   },
 ];
 
@@ -84,14 +80,8 @@ export function FeaturedCollections() {
           <motion.div key={col.slug} variants={fadeUp}>
             <Link href={`/shop?collection=${col.slug}`} className="group block">
               {/* Image container — 4:5 portrait */}
-              <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/5' }}>
-                <Image
-                  src={col.image}
-                  alt={col.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
+              <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
+                <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
               </div>
               {/* Caption */}
               <div className="mt-4 flex items-start justify-between">

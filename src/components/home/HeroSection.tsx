@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
@@ -16,20 +15,17 @@ const fadeUp = {
 
 export function HeroSection() {
   return (
-    <section className="relative h-screen min-h-[640px] max-h-[960px] flex items-end overflow-hidden">
-
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <Image
-          src="https://placehold.co/1600x960/C8C0B4/0F0F0F?text=."
-          alt="Les Fleurs Design — Preserved roses in ceramic vessel"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/15 to-transparent" />
-      </div>
+    <section
+      className="relative h-screen min-h-[640px] max-h-[960px] flex items-end overflow-hidden"
+      style={{
+        backgroundImage: "url('/sfondo.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/15 to-transparent" />
 
       {/* Hero content */}
       <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 md:px-10 lg:px-16 pb-20 md:pb-28">

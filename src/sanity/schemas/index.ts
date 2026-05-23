@@ -4,6 +4,7 @@ import { collection } from './collection';
 import { product } from './product';
 import { testimonial } from './testimonial';
 import { siteSettings } from './siteSettings';
+import { homepageHero } from './homepageHero';
 
 export const schemaTypes = [
   colorOption,
@@ -12,4 +13,5 @@ export const schemaTypes = [
   product,
   testimonial,
   siteSettings,
+  homepageHero,
 ];

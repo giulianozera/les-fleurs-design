@@ -5,6 +5,7 @@ import type {
   ProductSummary,
   Collection,
   Testimonial,
+  HomepageHero,
 } from './types';
 
 // ── Shared fragments ──────────────────────────────────────────────────────────
@@ -23,9 +24,16 @@ const PRODUCT_SUMMARY_FIELDS = groq`
   basePrice,
   stockQuantity,
   featured,
-  "images": images[0..1]{ ${IMAGE_FIELDS} },
+  "images": coalesce(images[0..1]{ ${IMAGE_FIELDS} }, []),
   "collection": collection->{ _id, title, slug },
-  "roseColors": roseColors[]->{ _id, name, slug, hexValue, available },
+  "roseColors": coalesce(roseColors[]->{ _id, name, slug, hexValue, available }, []),
+  "colorVariants": coalesce(colorVariants[]{
+    "colorId": color->_id,
+    "colorName": color->name,
+    "colorSlug": color->slug.current,
+    "colorHex": color->hexValue,
+    "productSlug": product->slug.current,
+  }, []),
 `;
 
 async function safeFetch<T>(query: string, params: Record<string, unknown>, fallback: T): Promise<T> {
@@ -73,13 +81,10 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       dimensions,
       featured,
       careInstructions,
-      "images": images[]{ ${IMAGE_FIELDS} },
+      "images": coalesce(images[]{ ${IMAGE_FIELDS} }, []),
       "collection": collection->{ _id, title, slug },
-      "roseColors": roseColors[]->{ _id, name, slug, hexValue, available },
-      "potOptions": potOptions[]->{
-        _id, name, slug, description, available,
-        "imageUrl": image.asset->url
-      },
+      "roseColors": coalesce(roseColors[]->{ _id, name, slug, hexValue, available }, []),
+      "potOptions": coalesce(potOptions[]->{ _id, name, slug, description, available, "imageUrl": image.asset->url }, []),
     }
   `;
   return safeFetch<Product | null>(query, { slug }, null);
@@ -131,4 +136,35 @@ export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
     }
   `;
   return safeFetch<Testimonial[]>(query, {}, []);
+}
+
+// ── Homepage Hero ─────────────────────────────────────────────────────────────
+
+const HERO_DEFAULTS: HomepageHero = {
+  eyebrow: 'Maison Florale — Miami',
+  headline: 'Not Just For Her.',
+  subhead:
+    'A design piece for hotels, restaurants, and the spaces that demand distinction — as much as it is a gift for the woman who deserves more than a bouquet.',
+  primaryCtaLabel: 'Shop the Collection',
+  primaryCtaHref: '/shop',
+  secondaryCtaLabel: 'For Business',
+  secondaryCtaHref: '/wholesale',
+  scrollHintLabel: 'Scroll',
+};
+
+export async function getHomepageHero(): Promise<HomepageHero> {
+  const query = groq`
+    *[_type == "homepageHero"][0] {
+      eyebrow,
+      headline,
+      subhead,
+      primaryCtaLabel,
+      primaryCtaHref,
+      secondaryCtaLabel,
+      secondaryCtaHref,
+      scrollHintLabel,
+    }
+  `;
+  const data = await safeFetch<HomepageHero | null>(query, {}, null);
+  return data ?? HERO_DEFAULTS;
 }

@@ -1,6 +1,17 @@
 // TypeScript types mirroring the Sanity schema documents.
 // These are the shapes returned by GROQ queries (after projection + reference resolution).
 
+export interface HomepageHero {
+  eyebrow: string;
+  headline: string;
+  subhead: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+  scrollHintLabel: string;
+}
+
 export interface SanitySlug {
   current: string;
 }
@@ -47,6 +58,14 @@ export interface ProductDimensions {
   height: number;
 }
 
+export interface ColorVariant {
+  colorId: string;
+  colorName: string;
+  colorSlug: string;
+  colorHex: string;
+  productSlug: string;
+}
+
 /** Lightweight shape used in shop grid / cards */
 export interface ProductSummary {
   _id: string;
@@ -58,6 +77,7 @@ export interface ProductSummary {
   images: SanityImageData[];
   collection: CollectionRef | null;
   roseColors: ColorOption[];
+  colorVariants: ColorVariant[];
 }
 
 /** Full shape used on the product detail page */

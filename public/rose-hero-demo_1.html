@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bloom — Rose Hero Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #0c0509;
+    color: #fff5ec;
+    overflow: hidden;
+  }
+
+  /* ---- HERO STAGE ---- */
+  .stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, #2a0f1e 0%, #160810 55%, #0c0509 100%);
+  }
+
+  /* ---- THE ROSE ---- */
+  .rose-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    width: 360px;
+    height: 360px;
+  }
+  .rose { width: 100%; height: 100%; }
+  .ring { transform-origin: center; opacity: 0; transform-box: fill-box; }
+  .r1 { animation: bloom 1.4s cubic-bezier(.34,1.5,.5,1) .2s both; }
+  .r2 { animation: bloom 1.2s cubic-bezier(.34,1.5,.5,1) .45s both; }
+  .r3 { animation: bloom 1.0s cubic-bezier(.34,1.5,.5,1) .7s both; }
+  .core { animation: bloom .8s cubic-bezier(.34,1.5,.5,1) .9s both; transform-origin: center; }
+
+  @keyframes bloom {
+    0%   { transform: scale(.05) rotate(-180deg); opacity: 0; filter: blur(8px); }
+    60%  { opacity: 1; filter: blur(0); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
+  }
+
+  /* ---- BURST PETALS (radial explosion on load) ---- */
+  .burst {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    pointer-events: none;
+  }
+  .bp {
+    position: absolute;
+    left: 0; top: 0;
+    width: 18px; height: 26px;
+    margin: -13px -9px;
+    border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+    opacity: 0;
+    animation: burst 2.2s cubic-bezier(.2,.6,.3,1) 1.05s both;
+    box-shadow: 0 0 12px rgba(232, 90, 124, 0.4);
+  }
+  @keyframes burst {
+    0%   { transform: rotate(var(--a)) translateY(0) scale(.3) rotate(0deg); opacity: 0; }
+    15%  { opacity: 1; }
+    100% { transform: rotate(var(--a)) translateY(-60vh) scale(1) rotate(720deg); opacity: 0; }
+  }
+
+  /* ---- FALLING PETAL RAIN ---- */
+  .rain {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .fp {
+    position: absolute;
+    top: -40px;
+    width: 16px; height: 22px;
+    border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+    opacity: 0;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    8%   { opacity: 0.85; }
+    92%  { opacity: 0.85; }
+    100% { transform: translateY(110vh) translateX(var(--dx)) rotate(720deg); opacity: 0; }
+  }
+
+  /* ---- TYPOGRAPHY ---- */
+  .title {
+    position: absolute;
+    bottom: 22vh;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(48px, 9vw, 120px);
+    letter-spacing: 0.35em;
+    color: #fff5ec;
+    opacity: 0;
+    animation: rise 1.4s ease 1.5s forwards;
+  }
+  .subtitle {
+    position: absolute;
+    bottom: 16vh;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: rgba(255, 245, 236, 0.55);
+    opacity: 0;
+    animation: rise 1.4s ease 1.9s forwards;
+  }
+  .cta {
+    position: absolute;
+    bottom: 8vh;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    padding: 14px 32px;
+    border: 1px solid rgba(255, 245, 236, 0.4);
+    background: transparent;
+    color: #fff5ec;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    opacity: 0;
+    animation: rise 1.4s ease 2.3s forwards;
+    transition: background .3s, border-color .3s;
+  }
+  .cta:hover { background: rgba(255, 245, 236, 0.08); border-color: #fff5ec; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+  .title, .subtitle {
+    animation-fill-mode: forwards;
+  }
+  @keyframes rise {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ---- REPLAY BUTTON ---- */
+  .replay {
+    position: absolute;
+    top: 20px; right: 20px;
+    padding: 8px 16px;
+    background: rgba(255, 245, 236, 0.08);
+    border: 1px solid rgba(255, 245, 236, 0.2);
+    color: #fff5ec;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    z-index: 10;
+  }
+  .replay:hover { background: rgba(255, 245, 236, 0.15); }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- Continuous falling petals -->
+  <div class="rain" id="rain"></div>
+
+  <!-- The rose -->
+  <div class="rose-wrap">
+    <svg class="rose" viewBox="-110 -110 220 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <path id="po" d="M0,0 C-22,-8 -32,-32 -18,-58 C-10,-72 10,-72 18,-58 C32,-32 22,-8 0,0 Z" transform="translate(0,-10)"/>
+        <path id="pm" d="M0,0 C-18,-6 -26,-26 -14,-46 C-8,-56 8,-56 14,-46 C26,-26 18,-6 0,0 Z" transform="translate(0,-6)"/>
+        <path id="pi" d="M0,0 C-14,-4 -20,-20 -10,-34 C-5,-42 5,-42 10,-34 C20,-20 14,-4 0,0 Z" transform="translate(0,-4)"/>
+      </defs>
+
+      <!-- Outer ring: lightest pink, 6 petals -->
+      <g class="ring r1">
+        <use href="#po" fill="#f4a8bc"/>
+        <use href="#po" fill="#ec8ea6" transform="rotate(60)"/>
+        <use href="#po" fill="#f4a8bc" transform="rotate(120)"/>
+        <use href="#po" fill="#ec8ea6" transform="rotate(180)"/>
+        <use href="#po" fill="#f4a8bc" transform="rotate(240)"/>
+        <use href="#po" fill="#ec8ea6" transform="rotate(300)"/>
+      </g>
+
+      <!-- Middle ring: mid red, 6 petals, offset 30deg -->
+      <g class="ring r2" transform="rotate(30)">
+        <use href="#pm" fill="#d6516e"/>
+        <use href="#pm" fill="#b83a55" transform="rotate(60)"/>
+        <use href="#pm" fill="#d6516e" transform="rotate(120)"/>
+        <use href="#pm" fill="#b83a55" transform="rotate(180)"/>
+        <use href="#pm" fill="#d6516e" transform="rotate(240)"/>
+        <use href="#pm" fill="#b83a55" transform="rotate(300)"/>
+      </g>
+
+      <!-- Inner ring: deepest red, 5 petals -->
+      <g class="ring r3">
+        <use href="#pi" fill="#8b1e3f"/>
+        <use href="#pi" fill="#6e1530" transform="rotate(72)"/>
+        <use href="#pi" fill="#8b1e3f" transform="rotate(144)"/>
+        <use href="#pi" fill="#6e1530" transform="rotate(216)"/>
+        <use href="#pi" fill="#8b1e3f" transform="rotate(288)"/>
+      </g>
+
+      <!-- Center -->
+      <circle class="ring core" r="9" fill="#4a0a20"/>
+      <circle class="ring core" r="3" fill="#1f0410"/>
+    </svg>
+  </div>
+
+  <!-- Radial burst on load -->
+  <div class="burst" id="burst"></div>
+
+  <!-- Hero text -->
+  <h1 class="title">BLOOM</h1>
+  <p class="subtitle">where stories begin</p>
+  <button class="cta" onclick="alert('Hook this up to your real CTA!')">Enter the garden</button>
+
+  <!-- Replay -->
+  <button class="replay" onclick="replay()">↻ Replay</button>
+</div>
+
+<script>
+  const colors = ['#e85a7c', '#c2435e', '#f4a8bc', '#d6516e', '#8b1e3f', '#ec8ea6', '#fce4ec'];
+
+  function buildRain() {
+    const rain = document.getElementById('rain');
+    rain.innerHTML = '';
+    for (let i = 0; i < 35; i++) {
+      const p = document.createElement('div');
+      p.className = 'fp';
+      const left = Math.random() * 100;
+      const dx = (Math.random() - 0.5) * 220;
+      const duration = 6 + Math.random() * 6;
+      const delay = Math.random() * 8;
+      const size = 0.6 + Math.random() * 0.9;
+      p.style.left = left + '%';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.setProperty('--dx', dx + 'px');
+      p.style.animationDuration = duration + 's';
+      p.style.animationDelay = delay + 's';
+      p.style.width = (16 * size) + 'px';
+      p.style.height = (22 * size) + 'px';
+      rain.appendChild(p);
+    }
+  }
+
+  function buildBurst() {
+    const burst = document.getElementById('burst');
+    burst.innerHTML = '';
+    const n = 20;
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement('div');
+      p.className = 'bp';
+      const angle = (i / n) * 360 + (Math.random() - 0.5) * 25;
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.setProperty('--a', angle + 'deg');
+      burst.appendChild(p);
+    }
+  }
+
+  function replay() {
+    const stage = document.getElementById('stage');
+    // Snapshot inner HTML, clear, force reflow, restore — restarts all CSS animations
+    const html = stage.innerHTML;
+    stage.innerHTML = '';
+    void stage.offsetWidth;
+    stage.innerHTML = html;
+    buildRain();
+    buildBurst();
+    // Rewire replay button after innerHTML restore
+    stage.querySelector('.replay').onclick = replay;
+    stage.querySelector('.cta').onclick = () => alert('Hook this up to your real CTA!');
+  }
+
+  buildRain();
+  buildBurst();
+</script>
+
+</body>
+</html>

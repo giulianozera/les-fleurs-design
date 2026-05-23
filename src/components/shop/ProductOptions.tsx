@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/sanity/types';
 import { useCartStore } from '@/store/cartStore';
@@ -9,14 +10,21 @@ import type { ShippingRate } from '@/lib/shipping';
 
 interface ProductOptionsProps {
   product: Product;
+  initialColorSlug?: string;
 }
 
-export function ProductOptions({ product }: ProductOptionsProps) {
-  const [selectedColorId, setSelectedColorId] = useState<string | null>(
-    product.roseColors.find((c) => c.available)?._id ?? null,
-  );
+export function ProductOptions({ product, initialColorSlug }: ProductOptionsProps) {
+  const [selectedColorId, setSelectedColorId] = useState<string | null>(() => {
+    if (initialColorSlug) {
+      const match = product.roseColors.find(
+        (c) => c.slug.current === initialColorSlug && c.available,
+      );
+      if (match) return match._id;
+    }
+    return product.roseColors.find((c) => c.available)?._id ?? null;
+  });
   const [selectedPotId, setSelectedPotId] = useState<string | null>(
-    product.potOptions.find((p) => p.available)?._id ?? null,
+    product.potOptions?.find((p) => p.available)?._id ?? null,
   );
   const [quantity, setQuantity] = useState(1);
   const [addedFeedback, setAddedFeedback] = useState(false);
@@ -27,6 +35,16 @@ export function ProductOptions({ product }: ProductOptionsProps) {
 
   const addItem = useCartStore((s) => s.addItem);
   const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (initialColorSlug) {
+      const match = product.roseColors.find(
+        (c) => c.slug.current === initialColorSlug && c.available,
+      );
+      if (match) setSelectedColorId(match._id);
+    }
+  }, [initialColorSlug]);
 
   async function handleEstimateShipping() {
     setZipError(null);
@@ -102,7 +120,34 @@ export function ProductOptions({ product }: ProductOptionsProps) {
       <div className="w-full h-px bg-charcoal/10" />
 
       {/* Rose color selector */}
-      {product.roseColors.length > 0 && (
+      {product.colorVariants.length > 0 ? (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="label-caps text-charcoal">Rose Color</p>
+            <p className="font-body text-sm text-warm-gray">
+              {product.colorVariants.find((v) => v.productSlug === product.slug.current)?.colorName ?? product.roseColors[0]?.name ?? 'Select'}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {product.colorVariants.map((v) => {
+              const isCurrent = v.productSlug === product.slug.current;
+              return (
+                <Link
+                  key={v.colorId}
+                  href={`/shop/${v.productSlug}`}
+                  title={v.colorName}
+                  aria-label={v.colorName}
+                  className={cn(
+                    'w-8 h-8 rounded-full border-2 transition-all duration-200',
+                    isCurrent ? 'border-charcoal scale-110' : 'border-transparent hover:border-charcoal/40',
+                  )}
+                  style={{ backgroundColor: v.colorHex }}
+                />
+              );
+            })}
+          </div>
+        </div>
+      ) : product.roseColors.length > 0 ? (
         <div>
           <div className="flex items-center justify-between mb-3">
             <p className="label-caps text-charcoal">Rose Color</p>
@@ -114,7 +159,11 @@ export function ProductOptions({ product }: ProductOptionsProps) {
             {product.roseColors.map((color) => (
               <button
                 key={color._id}
-                onClick={() => color.available && setSelectedColorId(color._id)}
+                onClick={() => {
+                  if (!color.available) return;
+                  setSelectedColorId(color._id);
+                  router.replace(`${pathname}?color=${color.slug.current}`, { scroll: false });
+                }}
                 disabled={!color.available}
                 title={color.name}
                 className={cn(
@@ -131,7 +180,7 @@ export function ProductOptions({ product }: ProductOptionsProps) {
             ))}
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* Pot option selector */}
       {product.potOptions.length > 0 && (

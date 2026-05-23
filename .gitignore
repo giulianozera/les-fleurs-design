@@ -40,6 +40,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local image source folders (already uploaded to Sanity CDN — not needed in repo)
+/public/ceramica bianca rotondo/
+/public/chinese-classic/
+/public/chinese-mush/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

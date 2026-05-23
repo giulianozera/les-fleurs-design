@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
@@ -62,29 +61,8 @@ function ProductCard({ product }: { product: Product }) {
       onMouseLeave={() => setHovered(false)}
     >
       {/* Image container — 4:5 portrait */}
-      <div className="relative w-full overflow-hidden bg-ivory-dark" style={{ aspectRatio: '4/5' }}>
-        {/* Primary image */}
-        <Image
-          src={product.primaryImage}
-          alt={product.name}
-          fill
-          className={`object-cover absolute inset-0 transition-opacity duration-700 ${hovered ? 'opacity-0' : 'opacity-100'}`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-        />
-        {/* Hover image */}
-        <Image
-          src={product.hoverImage}
-          alt={`${product.name} — alternate view`}
-          fill
-          className={`object-cover absolute inset-0 transition-opacity duration-700 ${hovered ? 'opacity-100' : 'opacity-0'}`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-        />
-        {/* Quick-add overlay on hover */}
-        <div
-          className={`absolute bottom-0 left-0 right-0 bg-charcoal/90 backdrop-blur-sm py-3 px-4 transition-transform duration-500 ${hovered ? 'translate-y-0' : 'translate-y-full'}`}
-        >
-          <p className="label-caps text-ivory text-center">Quick Add</p>
-        </div>
+      <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
+        <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
       </div>
 
       {/* Product info */}
