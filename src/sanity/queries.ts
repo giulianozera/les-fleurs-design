@@ -145,6 +145,19 @@ export async function getFeaturedTestimonials(): Promise<Testimonial[]> {
   return safeFetch<Testimonial[]>(query, {}, []);
 }
 
+// ── Maison Collection slider images ───────────────────────────────────────────
+
+export async function getMaisonImages(): Promise<{ url: string; alt: string }[]> {
+  const query = groq`
+    *[_type == "product" && collection->slug.current == "maison-collection" && defined(images[0].asset)]
+    | order(_createdAt desc) [0..7] {
+      "url": images[0].asset->url,
+      "alt": coalesce(images[0].alt, title),
+    }
+  `;
+  return safeFetch<{ url: string; alt: string }[]>(query, {}, []);
+}
+
 // ── Homepage Hero ─────────────────────────────────────────────────────────────
 
 const HERO_DEFAULTS: HomepageHero = {

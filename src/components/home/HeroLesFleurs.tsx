@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 // ── Palette ──────────────────────────────────────────────────────────────────
@@ -27,20 +28,21 @@ interface Petal {
   color: string;
 }
 
-// Generated once at module load — decorative, stable across re-renders
-const FALLING_PETALS: Petal[] = Array.from({ length: 8 }, (_, i) => {
-  const size = 0.7 + Math.random() * 0.6;
-  return {
-    id: i,
-    left: Math.random() * 100,
-    dx: (Math.random() - 0.5) * 120,
-    duration: 18 + Math.random() * 10,
-    delay: Math.random() * 12,
-    width: Math.round(12 * size),
-    height: Math.round(16 * size),
-    color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
-  };
-});
+function makePetals(): Petal[] {
+  return Array.from({ length: 8 }, (_, i) => {
+    const size = 0.7 + Math.random() * 0.6;
+    return {
+      id: i,
+      left: Math.random() * 100,
+      dx: (Math.random() - 0.5) * 120,
+      duration: 18 + Math.random() * 10,
+      delay: Math.random() * 12,
+      width: Math.round(12 * size),
+      height: Math.round(16 * size),
+      color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
+    };
+  });
+}
 
 // ── Variant factories ─────────────────────────────────────────────────────────
 function bloomVariant(delay: number, duration: number) {
@@ -130,6 +132,11 @@ export function HeroLesFleurs({
   scrollHintLabel = 'Scroll',
 }: HeroProps) {
   const reducedMotion = useReducedMotion();
+  const [petals, setPetals] = useState<Petal[]>([]);
+
+  useEffect(() => {
+    if (!reducedMotion) setPetals(makePetals());
+  }, [reducedMotion]);
 
   const initial = reducedMotion ? 'visible' : 'hidden';
 
@@ -147,13 +154,13 @@ export function HeroLesFleurs({
         {eyebrow}
       </motion.p>
 
-      {/* Sparse drifting petals */}
-      {!reducedMotion && (
+      {/* Sparse drifting petals — rendered client-side only to avoid SSR/CSR mismatch */}
+      {petals.length > 0 && (
         <div
           aria-hidden="true"
           className="absolute inset-0 overflow-hidden pointer-events-none"
         >
-          {FALLING_PETALS.map((p) => (
+          {petals.map((p) => (
             <FallingPetal key={p.id} petal={p} />
           ))}
         </div>

@@ -5,14 +5,17 @@ import { WhySection } from '@/components/home/WhySection';
 import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { Testimonials } from '@/components/home/Testimonials';
 import { Newsletter } from '@/components/home/Newsletter';
-import { getHomepageHero } from '@/sanity/queries';
+import { getHomepageHero, getMaisonImages } from '@/sanity/queries';
 
 export default async function HomePage() {
-  const hero = await getHomepageHero();
+  const [hero, maisonImages] = await Promise.all([
+    getHomepageHero(),
+    getMaisonImages(),
+  ]);
   return (
     <>
       <HeroLesFleurs {...hero} />
-      <BeyondTheGift />
+      <BeyondTheGift maisonImages={maisonImages} />
       <FeaturedCollections />
       <WhySection />
       <FeaturedProducts />

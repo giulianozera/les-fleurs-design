@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { ForHerSlider } from './ForHerSlider';
+import type { SliderImage } from './ForHerSlider';
 
 const cards = [
   {
@@ -41,7 +43,7 @@ const fadeUp = {
   },
 };
 
-export function BeyondTheGift() {
+export function BeyondTheGift({ maisonImages = [] }: { maisonImages?: SliderImage[] }) {
   return (
     <section className="py-24 md:py-32 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16">
 
@@ -77,7 +79,11 @@ export function BeyondTheGift() {
             <Link href={card.href} className="group block">
               {/* 4:5 portrait image */}
               <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
-                <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
+                {card.id === 'for-her' ? (
+                  <ForHerSlider images={maisonImages} />
+                ) : (
+                  <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
+                )}
               </div>
 
               {/* Caption */}
