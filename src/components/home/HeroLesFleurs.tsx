@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 
@@ -245,15 +246,22 @@ export function HeroLesFleurs({
         </svg>
       </div>
 
-      {/* Headline */}
-      <motion.h1
-        className="font-display font-normal text-[clamp(42px,6.5vw,84px)] leading-[1.05] tracking-[0.01em] text-[#2a1f12] text-center mb-[2.5vh] max-w-[14ch]"
+      {/* Wordmark logo */}
+      <motion.div
+        className="mb-[2.5vh]"
         variants={fadeUpVariant(2.0)}
         initial={initial}
         animate="visible"
       >
-        {headline}
-      </motion.h1>
+        <Image
+          src="/les-fleurs-logo.png"
+          alt="Les Fleurs"
+          width={1254}
+          height={315}
+          priority
+          className="w-full max-w-[880px] h-auto mx-auto drop-shadow-[0_4px_24px_rgba(42,31,18,0.06)]"
+        />
+      </motion.div>
 
       {/* Subhead */}
       <motion.p
