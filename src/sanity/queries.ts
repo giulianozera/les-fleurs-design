@@ -85,6 +85,13 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       "collection": collection->{ _id, title, slug },
       "roseColors": coalesce(roseColors[]->{ _id, name, slug, hexValue, available }, []),
       "potOptions": coalesce(potOptions[]->{ _id, name, slug, description, available, "imageUrl": image.asset->url }, []),
+      "colorVariants": coalesce(colorVariants[]{
+        "colorId": color->_id,
+        "colorName": color->name,
+        "colorSlug": color->slug.current,
+        "colorHex": color->hexValue,
+        "productSlug": product->slug.current,
+      }, []),
     }
   `;
   return safeFetch<Product | null>(query, { slug }, null);
