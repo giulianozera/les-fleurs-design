@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server';
+import { waitUntil } from '@vercel/functions';
 import Stripe from 'stripe';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail, ADMIN } from '@/lib/resend';
@@ -97,7 +98,7 @@ export async function POST(req: NextRequest) {
         shippingAddress: addr,
       };
 
-      void (async () => {
+      waitUntil((async () => {
         // 1. Send emails immediately — never blocked by EasyPost
         await Promise.all([
           sendEmail({
@@ -134,7 +135,7 @@ export async function POST(req: NextRequest) {
             console.error('EasyPost label error:', err);
           }
         }
-      })();
+      })());
     }
   }
 
