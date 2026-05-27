@@ -15,8 +15,6 @@ export function ProductCard({ product }: ProductCardProps) {
   const primaryImage = product.images[0];
   const hoverImage = product.images[1] ?? product.images[0];
 
-  if (!primaryImage) return null;
-
   return (
     <div
       className="group"
@@ -29,24 +27,32 @@ export function ProductCard({ product }: ProductCardProps) {
           className="relative w-full overflow-hidden bg-ivory-dark"
           style={{ aspectRatio: '4/5' }}
         >
-          <Image
-            src={primaryImage.url}
-            alt={primaryImage.alt ?? product.title}
-            fill
-            className={`object-cover absolute inset-0 transition-opacity duration-700 ${
-              hovered ? 'opacity-0' : 'opacity-100'
-            }`}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          />
-          <Image
-            src={hoverImage.url}
-            alt={`${product.title} — alternate view`}
-            fill
-            className={`object-cover absolute inset-0 transition-opacity duration-700 ${
-              hovered ? 'opacity-100' : 'opacity-0'
-            }`}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          />
+          {primaryImage ? (
+            <>
+              <Image
+                src={primaryImage.url}
+                alt={primaryImage.alt ?? product.title}
+                fill
+                className={`object-cover absolute inset-0 transition-opacity duration-700 ${
+                  hovered ? 'opacity-0' : 'opacity-100'
+                }`}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              />
+              <Image
+                src={hoverImage.url}
+                alt={`${product.title} — alternate view`}
+                fill
+                className={`object-cover absolute inset-0 transition-opacity duration-700 ${
+                  hovered ? 'opacity-100' : 'opacity-0'
+                }`}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              />
+            </>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-[#EDE6DA]">
+              <span className="label-caps text-warm-gray text-xs">No image</span>
+            </div>
+          )}
           <div
             className={`absolute bottom-0 left-0 right-0 bg-charcoal/90 backdrop-blur-sm py-3 transition-transform duration-500 ${
               hovered ? 'translate-y-0' : 'translate-y-full'
