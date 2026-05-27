@@ -98,23 +98,7 @@ export async function POST(req: NextRequest) {
       };
 
       void (async () => {
-        // Try to generate a shipping label via EasyPost
-        let label: { labelUrl: string; trackingCode: string; carrier: string } | null = null;
-        if (addr?.line1 && addr.city && addr.state && addr.postal_code) {
-          try {
-            label = await createShippingLabel({
-              toName: session.customer_details?.name ?? 'Customer',
-              toStreet1: addr.line1,
-              toCity: addr.city,
-              toState: addr.state,
-              toZip: addr.postal_code,
-              toCountry: addr.country ?? 'US',
-            });
-          } catch (err) {
-            console.error('EasyPost label error:', err);
-          }
-        }
-
+        // 1. Send emails immediately — never blocked by EasyPost
         await Promise.all([
           sendEmail({
             to: customerEmail,
@@ -124,9 +108,32 @@ export async function POST(req: NextRequest) {
           sendEmail({
             to: ADMIN,
             subject: `New order — ${customerEmail}`,
-            html: orderAdminHtml({ ...emailData, label: label ?? undefined }),
+            html: orderAdminHtml(emailData),
           }),
         ]);
+
+        // 2. Generate shipping label and send a follow-up admin email with the label
+        if (addr?.line1 && addr.city && addr.state && addr.postal_code) {
+          try {
+            const label = await createShippingLabel({
+              toName: session.customer_details?.name ?? 'Customer',
+              toStreet1: addr.line1,
+              toCity: addr.city,
+              toState: addr.state,
+              toZip: addr.postal_code,
+              toCountry: addr.country ?? 'US',
+            });
+            if (label) {
+              await sendEmail({
+                to: ADMIN,
+                subject: `Shipping label ready — ${customerEmail}`,
+                html: orderAdminHtml({ ...emailData, label }),
+              });
+            }
+          } catch (err) {
+            console.error('EasyPost label error:', err);
+          }
+        }
       })();
     }
   }
