@@ -49,7 +49,10 @@ export async function getShippingRates(
   _weightGrams: number,
   orderSubtotal: number,
 ): Promise<ShippingRate[]> {
-  return [{ ...FREE }];
+  if (orderSubtotal >= FREE_SHIPPING_THRESHOLD && FREE_SHIPPING_THRESHOLD > 0) {
+    return [{ ...FREE }];
+  }
+  return [{ ...STANDARD }, { ...EXPRESS }];
 }
 
 export interface LabelResult {
