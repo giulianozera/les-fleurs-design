@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
       const emailData = {
         customerName: session.customer_details?.name ?? '',
         customerEmail,
+        customerPhone: session.customer_details?.phone ?? null,
         items: (session.metadata?.items ? JSON.parse(session.metadata.items) : []) as OrderItemPayload[],
         totalCents: session.amount_total ?? 0,
         shippingAddress: addr,

@@ -46,9 +46,23 @@ const btn = (href: string, label: string) =>
 export interface OrderEmailData {
   customerName: string;
   customerEmail: string;
+  customerPhone?: string | null;
   items: { title: string; colorName?: string | null; potName?: string | null; quantity: number; price: number }[];
   totalCents: number;
   shippingMethod?: string;
+  shippingAddress?: {
+    line1?: string | null;
+    line2?: string | null;
+    city?: string | null;
+    state?: string | null;
+    postal_code?: string | null;
+    country?: string | null;
+  } | null;
+  label?: {
+    labelUrl: string;
+    trackingCode: string;
+    carrier: string;
+  };
 }
 
 export function orderConfirmationHtml(data: OrderEmailData): string {
@@ -92,11 +106,21 @@ export function orderAdminHtml(data: OrderEmailData): string {
     .join('<br>');
   const total = (data.totalCents / 100).toLocaleString('en-US', { minimumFractionDigits: 2 });
 
+  const addr = data.shippingAddress;
+  const addressBlock = addr
+    ? [addr.line1, addr.line2, addr.city, addr.state, addr.postal_code, addr.country]
+        .filter(Boolean)
+        .join(', ')
+    : null;
+
   return layout(`
     ${h1('New order received.')}
     ${p(`<strong>Customer:</strong> ${data.customerName || '—'} (${data.customerEmail})`)}
+    ${data.customerPhone ? p(`<strong>Phone:</strong> ${data.customerPhone}`) : ''}
+    ${addressBlock ? p(`<strong>Ship to:</strong><br>${addressBlock}`) : ''}
     ${p(`<strong>Items:</strong><br>${itemList}`)}
     ${p(`<strong>Total:</strong> $${total}`)}
+    ${data.label ? `${divider()}${p(`<strong>Tracking:</strong> ${data.label.carrier} · ${data.label.trackingCode}`)}${btn(data.label.labelUrl, 'Print Shipping Label')}` : ''}
   `);
 }
 
