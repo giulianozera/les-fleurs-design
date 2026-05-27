@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    // Re-fetch the session with line items and shipping details expanded
+    // Re-fetch the full session (collected_information.shipping_details is inline, no expand needed)
     const session = await stripe.checkout.sessions.retrieve(
       (event.data.object as Stripe.Checkout.Session).id,
     );
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
           stripe_payment_intent_id: session.payment_intent as string | null,
           customer_email: session.customer_details?.email ?? '',
           customer_name: session.customer_details?.name ?? null,
-          shipping_address: session.shipping_details?.address ?? null,
+          shipping_address: session.collected_information?.shipping_details?.address ?? null,
           subtotal_cents: session.amount_subtotal ?? 0,
           shipping_cents: session.total_details?.amount_shipping ?? 0,
           total_cents: session.amount_total ?? 0,
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     // Generate shipping label + send emails (fire-and-forget)
     const customerEmail = session.customer_details?.email;
     if (customerEmail) {
-      const addr = session.shipping_details?.address ?? null;
+      const addr = session.collected_information?.shipping_details?.address ?? null;
       const emailData = {
         customerName: session.customer_details?.name ?? '',
         customerEmail,
