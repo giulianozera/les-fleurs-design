@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail, ADMIN } from '@/lib/resend';
 import { orderConfirmationHtml, orderAdminHtml } from '@/lib/emails';
+import { createShippingLabel } from '@/lib/shipping';
 
 function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -40,7 +41,10 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
+    // Re-fetch the session with line items and shipping details expanded
+    const session = await stripe.checkout.sessions.retrieve(
+      (event.data.object as Stripe.Checkout.Session).id,
+    );
     const supabase = getSupabaseAdminClient();
 
     if (supabase) {
@@ -55,7 +59,7 @@ export async function POST(req: NextRequest) {
           stripe_payment_intent_id: session.payment_intent as string | null,
           customer_email: session.customer_details?.email ?? '',
           customer_name: session.customer_details?.name ?? null,
-          shipping_address: session.collected_information?.shipping_details?.address ?? null,
+          shipping_address: session.shipping_details?.address ?? null,
           subtotal_cents: session.amount_subtotal ?? 0,
           shipping_cents: session.total_details?.amount_shipping ?? 0,
           total_cents: session.amount_total ?? 0,
@@ -80,27 +84,49 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Send confirmation emails (fire-and-forget, don't block the 200 response)
+    // Generate shipping label + send emails (fire-and-forget)
     const customerEmail = session.customer_details?.email;
     if (customerEmail) {
+      const addr = session.shipping_details?.address ?? null;
       const emailData = {
         customerName: session.customer_details?.name ?? '',
         customerEmail,
         items: (session.metadata?.items ? JSON.parse(session.metadata.items) : []) as OrderItemPayload[],
         totalCents: session.amount_total ?? 0,
+        shippingAddress: addr,
       };
-      void Promise.all([
-        sendEmail({
-          to: customerEmail,
-          subject: 'Your Les Fleurs Design order is confirmed',
-          html: orderConfirmationHtml(emailData),
-        }),
-        sendEmail({
-          to: ADMIN,
-          subject: `New order — ${customerEmail}`,
-          html: orderAdminHtml(emailData),
-        }),
-      ]);
+
+      void (async () => {
+        // Try to generate a shipping label via EasyPost
+        let label: { labelUrl: string; trackingCode: string; carrier: string } | null = null;
+        if (addr?.line1 && addr.city && addr.state && addr.postal_code) {
+          try {
+            label = await createShippingLabel({
+              toName: session.customer_details?.name ?? 'Customer',
+              toStreet1: addr.line1,
+              toCity: addr.city,
+              toState: addr.state,
+              toZip: addr.postal_code,
+              toCountry: addr.country ?? 'US',
+            });
+          } catch (err) {
+            console.error('EasyPost label error:', err);
+          }
+        }
+
+        await Promise.all([
+          sendEmail({
+            to: customerEmail,
+            subject: 'Your Les Fleurs Design order is confirmed',
+            html: orderConfirmationHtml(emailData),
+          }),
+          sendEmail({
+            to: ADMIN,
+            subject: `New order — ${customerEmail}`,
+            html: orderAdminHtml({ ...emailData, label: label ?? undefined }),
+          }),
+        ]);
+      })();
     }
   }
 
