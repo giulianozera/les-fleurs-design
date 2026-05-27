@@ -1,5 +1,4 @@
 import type { NextRequest } from 'next/server';
-import { waitUntil } from '@vercel/functions';
 import Stripe from 'stripe';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail, ADMIN } from '@/lib/resend';
@@ -42,64 +41,67 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    // Re-fetch the full session (collected_information.shipping_details is inline, no expand needed)
     const session = await stripe.checkout.sessions.retrieve(
       (event.data.object as Stripe.Checkout.Session).id,
     );
-    const supabase = getSupabaseAdminClient();
 
-    if (supabase) {
-      const items: OrderItemPayload[] = session.metadata?.items
-        ? JSON.parse(session.metadata.items)
-        : [];
+    const customerEmail = session.customer_details?.email;
+    const addr = session.collected_information?.shipping_details?.address ?? null;
+    const items: OrderItemPayload[] = session.metadata?.items
+      ? JSON.parse(session.metadata.items)
+      : [];
 
-      const { data: order } = await supabase
-        .from('orders')
-        .insert({
-          stripe_session_id: session.id,
-          stripe_payment_intent_id: session.payment_intent as string | null,
-          customer_email: session.customer_details?.email ?? '',
-          customer_name: session.customer_details?.name ?? null,
-          shipping_address: session.collected_information?.shipping_details?.address ?? null,
-          subtotal_cents: session.amount_subtotal ?? 0,
-          shipping_cents: session.total_details?.amount_shipping ?? 0,
-          total_cents: session.amount_total ?? 0,
-          status: 'paid',
-        })
-        .select('id')
-        .single();
+    // ── 1. Save order to Supabase ─────────────────────────────────────────────
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { data: order } = await supabase
+          .from('orders')
+          .insert({
+            stripe_session_id: session.id,
+            stripe_payment_intent_id: session.payment_intent as string | null,
+            customer_email: customerEmail ?? '',
+            customer_name: session.customer_details?.name ?? null,
+            shipping_address: addr ?? null,
+            subtotal_cents: session.amount_subtotal ?? 0,
+            shipping_cents: session.total_details?.amount_shipping ?? 0,
+            total_cents: session.amount_total ?? 0,
+            status: 'paid',
+          })
+          .select('id')
+          .single();
 
-      if (order) {
-        await supabase.from('order_items').insert(
-          items.map((item) => ({
-            order_id: order.id,
-            product_id: item.productId,
-            product_title: item.title,
-            color_name: item.colorName ?? null,
-            pot_name: item.potName ?? null,
-            quantity: item.quantity,
-            unit_price_cents: Math.round(item.price * 100),
-            image_url: item.imageUrl ?? null,
-          })),
-        );
+        if (order) {
+          await supabase.from('order_items').insert(
+            items.map((item) => ({
+              order_id: order.id,
+              product_id: item.productId,
+              product_title: item.title,
+              color_name: item.colorName ?? null,
+              pot_name: item.potName ?? null,
+              quantity: item.quantity,
+              unit_price_cents: Math.round(item.price * 100),
+              image_url: item.imageUrl ?? null,
+            })),
+          );
+        }
       }
+    } catch (err) {
+      console.error('Supabase insert error:', err);
     }
 
-    // Generate shipping label + send emails (fire-and-forget)
-    const customerEmail = session.customer_details?.email;
+    // ── 2. Send confirmation emails ───────────────────────────────────────────
     if (customerEmail) {
-      const addr = session.collected_information?.shipping_details?.address ?? null;
       const emailData = {
         customerName: session.customer_details?.name ?? '',
         customerEmail,
         customerPhone: session.customer_details?.phone ?? null,
-        items: (session.metadata?.items ? JSON.parse(session.metadata.items) : []) as OrderItemPayload[],
+        items,
         totalCents: session.amount_total ?? 0,
         shippingAddress: addr,
       };
 
-      waitUntil((async () => {
-        // 1. Send emails immediately — never blocked by EasyPost
+      try {
         await Promise.all([
           sendEmail({
             to: customerEmail,
@@ -112,30 +114,32 @@ export async function POST(req: NextRequest) {
             html: orderAdminHtml(emailData),
           }),
         ]);
+      } catch (err) {
+        console.error('Email send error:', err);
+      }
 
-        // 2. Generate shipping label and send a follow-up admin email with the label
-        if (addr?.line1 && addr.city && addr.state && addr.postal_code) {
-          try {
-            const label = await createShippingLabel({
-              toName: session.customer_details?.name ?? 'Customer',
-              toStreet1: addr.line1,
-              toCity: addr.city,
-              toState: addr.state,
-              toZip: addr.postal_code,
-              toCountry: addr.country ?? 'US',
+      // ── 3. Generate shipping label → follow-up admin email ──────────────────
+      if (addr?.line1 && addr.city && addr.state && addr.postal_code) {
+        try {
+          const label = await createShippingLabel({
+            toName: session.customer_details?.name ?? 'Customer',
+            toStreet1: addr.line1,
+            toCity: addr.city,
+            toState: addr.state,
+            toZip: addr.postal_code,
+            toCountry: addr.country ?? 'US',
+          });
+          if (label) {
+            await sendEmail({
+              to: ADMIN,
+              subject: `Shipping label ready — ${customerEmail}`,
+              html: orderAdminHtml({ ...emailData, label }),
             });
-            if (label) {
-              await sendEmail({
-                to: ADMIN,
-                subject: `Shipping label ready — ${customerEmail}`,
-                html: orderAdminHtml({ ...emailData, label }),
-              });
-            }
-          } catch (err) {
-            console.error('EasyPost label error:', err);
           }
+        } catch (err) {
+          console.error('EasyPost label error:', err);
         }
-      })());
+      }
     }
   }
 
