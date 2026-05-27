@@ -9,6 +9,6 @@ export const sanityClient = createClient({
   projectId: projectId || 'unconfigured',
   dataset,
   apiVersion: '2024-01-01',
-  useCdn: process.env.NODE_ENV === 'production',
+  useCdn: false,
   token: process.env.SANITY_API_READ_TOKEN,
 });

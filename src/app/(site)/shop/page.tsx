@@ -4,6 +4,7 @@ import { getAllProducts, getAllCollections } from '@/sanity/queries';
 import { ProductCard } from '@/components/shop/ProductCard';
 import { FilterBar } from '@/components/shop/FilterBar';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Shop' };
 
 interface ShopPageProps {
