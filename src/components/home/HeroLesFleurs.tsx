@@ -128,7 +128,7 @@ export function HeroLesFleurs({
   primaryCtaLabel = 'Shop the Collection',
   primaryCtaHref = '/shop',
   secondaryCtaLabel = 'For Business',
-  secondaryCtaHref = '/wholesale',
+  secondaryCtaHref = '/business',
   scrollHintLabel = 'Scroll',
 }: HeroProps) {
   const reducedMotion = useReducedMotion();

@@ -15,18 +15,18 @@ const cards = [
     cta: 'Shop Gifts',
   },
   {
-    id: 'for-hospitality',
-    title: 'For Hospitality',
-    body: "Lobbies, suites, dining rooms. A signature that doesn't wilt.",
-    href: '/wholesale',
-    cta: 'Partner With Us',
+    id: 'for-business',
+    title: 'For Business',
+    body: 'Hotels, restaurants, offices, events. A signature piece for spaces that demand distinction.',
+    href: '/business',
+    cta: 'Explore Business',
   },
   {
-    id: 'for-retail',
-    title: 'For Retail & Interiors',
-    body: 'An object of design, available at wholesale.',
-    href: '/wholesale',
-    cta: 'Wholesale Inquiry',
+    id: 'for-interiors',
+    title: 'Interiors',
+    body: 'Commission a piece designed around your project — palette, scale, material, intention.',
+    href: '/interiors',
+    cta: 'Work With Us',
   },
 ];
 
