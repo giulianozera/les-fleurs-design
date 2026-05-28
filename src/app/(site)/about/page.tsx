@@ -3,7 +3,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Our Story — Les Fleurs Design',
-  description: 'Roses preserved at peak bloom. A Miami atelier dedicated to permanence.',
+  description:
+    'The story behind Les Fleurs Design — a Miami atelier founded on a refusal to accept that beauty must be temporary.',
 };
 
 const PILLARS = [
@@ -27,43 +28,104 @@ const PILLARS = [
 export default function AboutPage() {
   return (
     <div className="bg-ivory">
-      {/* Hero */}
+
+      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section className="pt-[72px] bg-charcoal text-ivory">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-28 md:py-40">
           <p className="label-caps text-ivory/30 mb-8">Our Story</p>
           <h1 className="font-display text-[clamp(3.5rem,8vw,7rem)] font-light leading-[0.92] max-w-3xl">
             A still life that lasts.
           </h1>
-          <p className="font-body text-sm text-ivory/50 leading-[1.9] mt-10 max-w-sm">
+          <p className="font-body text-sm text-ivory/40 leading-[1.9] mt-10 max-w-sm">
             Les Fleurs Design. Miami, Florida. Est. 2023.
           </p>
         </div>
       </section>
 
-      {/* Origin */}
+      {/* ── Founder intro ────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-24 md:py-32 border-b border-charcoal/10">
         <div className="lg:grid lg:grid-cols-2 lg:gap-24 items-start">
+
+          {/* Left — founder portrait placeholder */}
           <div>
+            <div
+              className="w-full bg-ivory-dark flex items-end p-6"
+              style={{ aspectRatio: '3/4' }}
+            >
+              {/* TODO: replace with founder portrait
+                  <Image src="/founder.jpg" fill className="object-cover" alt="[Founder name], founder of Les Fleurs Design" />
+              */}
+              <p className="label-caps text-charcoal/20 text-[9px]">Founder portrait — coming soon</p>
+            </div>
+          </div>
+
+          {/* Right — story text */}
+          <div className="mt-10 lg:mt-2">
             <p className="label-caps text-warm-gray mb-6">The Beginning</p>
-            <h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-light text-charcoal leading-tight mb-8">
+            <h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-light text-charcoal leading-tight mb-10">
               Permanence is the point.
             </h2>
-          </div>
-          <div className="mt-6 lg:mt-2">
-            <p className="font-body text-sm text-warm-gray leading-[2] mb-5">
-              Les Fleurs Design was founded on a simple refusal — to accept that beauty must be temporary. Cut flowers die. Digital flowers don't exist. We wanted something in between: real roses, real craft, real permanence.
+
+            {/* TODO: replace with founder's actual story — 3 paragraphs, first-person, intimate.
+                Tone: personal, honest, design-forward. Not a press release.
+                Example opening: "I started Les Fleurs Design because I couldn't find what I was looking for.
+                Not in a florist. Not in a gift shop. Somewhere between a living flower and a work of art —
+                something real, made with care, built to stay."
+            */}
+            <p className="font-body text-sm text-warm-gray leading-[2] mb-6">
+              I started Les Fleurs Design because I couldn&rsquo;t find what I was looking for. Every flower I gave eventually disappeared. Every gift I received did the same. I wanted to make something that didn&rsquo;t ask for that trade-off.
             </p>
-            <p className="font-body text-sm text-warm-gray leading-[2] mb-5">
-              We started with a single question: what does a gift look like one year after it's given? For most flowers, nothing. For ours, the same arrangement that arrived — colors intact, petals soft, structure unchanged.
+            <p className="font-body text-sm text-warm-gray leading-[2] mb-6">
+              {/* TODO: founder paragraph 2 — the discovery / the process / why Miami */}
+              [Founder story — paragraph 2. Replace with your own words.]
             </p>
             <p className="font-body text-sm text-warm-gray leading-[2]">
-              Today we work with hotels, private clients, and retailers across the United States who share a belief that the spaces they inhabit deserve distinction — not decoration.
+              {/* TODO: founder paragraph 3 — where the brand is now / what drives it */}
+              [Founder story — paragraph 3. Replace with your own words.]
             </p>
           </div>
         </div>
       </section>
 
-      {/* The craft — 3 pillars */}
+      {/* ── Philosophy ───────────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-24 md:py-32 border-b border-charcoal/10">
+        <div className="lg:grid lg:grid-cols-2 lg:gap-24 items-center">
+          <div>
+            <p className="label-caps text-warm-gray mb-6">The Philosophy</p>
+            <h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-light text-charcoal leading-tight mb-8">
+              Not decoration. An object of design.
+            </h2>
+            <div className="w-8 h-px bg-gold mb-8" />
+            {/* TODO: replace with founder's vision statement — 2 paragraphs, first-person.
+                Tone: clear, direct, a little uncompromising. This is the brand's manifesto.
+                What do you believe about objects, beauty, and permanence?
+            */}
+            <p className="font-body text-sm text-warm-gray leading-[2] mb-5">
+              {/* TODO: philosophy paragraph 1 */}
+              [Vision paragraph 1 — what you believe about the role of objects in a space. Replace with your own words.]
+            </p>
+            <p className="font-body text-sm text-warm-gray leading-[2]">
+              {/* TODO: philosophy paragraph 2 */}
+              [Vision paragraph 2 — why permanence matters. Why the ceramic vessel matters as much as the rose. Replace with your own words.]
+            </p>
+          </div>
+
+          {/* Atmospheric image placeholder */}
+          <div className="mt-10 lg:mt-0">
+            <div
+              className="w-full bg-ivory-dark flex items-end p-6"
+              style={{ aspectRatio: '4/5' }}
+            >
+              {/* TODO: replace with atmospheric atelier / process image
+                  Options: hand-forming ceramics, close-up of preserved petals, workspace detail
+              */}
+              <p className="label-caps text-charcoal/20 text-[9px]">Atelier image — coming soon</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── The craft — 3 pillars ─────────────────────────────────────────────── */}
       <section className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-24 md:py-32 border-b border-charcoal/10">
         <p className="label-caps text-warm-gray mb-16">The Craft</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
@@ -82,7 +144,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Pull quote */}
+      {/* ── Pull quote ───────────────────────────────────────────────────────── */}
       <section className="bg-charcoal text-ivory">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-28 md:py-36 text-center">
           <div className="w-8 h-px bg-gold mx-auto mb-10" />
@@ -93,33 +155,43 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ── CTA ──────────────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-24 md:py-32">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-          <div>
-            <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-light text-charcoal mb-3">
-              Ready to explore?
-            </h2>
-            <p className="font-body text-sm text-warm-gray">
-              Browse the collection or reach out for wholesale inquiries.
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+          <div className="border-t border-charcoal/10 pt-8">
+            <h3 className="font-display text-2xl font-light text-charcoal mb-3">Shop the Collection</h3>
+            <p className="font-body text-sm text-warm-gray leading-[1.8] mb-6">
+              Preserved rose arrangements for private clients. Ships across the United States.
             </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 flex-shrink-0">
-            <Link
-              href="/shop"
-              className="label-caps bg-charcoal text-ivory px-8 py-3.5 hover:bg-stone transition-colors duration-300"
-            >
-              Shop Collection
-            </Link>
-            <Link
-              href="/wholesale"
-              className="label-caps border border-charcoal text-charcoal px-8 py-3.5 hover:bg-charcoal hover:text-ivory transition-colors duration-300"
-            >
-              Partner With Us
+            <Link href="/shop" className="label-caps text-charcoal/60 hover:text-charcoal transition-colors duration-300">
+              Browse →
             </Link>
           </div>
+
+          <div className="border-t border-charcoal/10 pt-8">
+            <h3 className="font-display text-2xl font-light text-charcoal mb-3">For Business</h3>
+            <p className="font-body text-sm text-warm-gray leading-[1.8] mb-6">
+              Hotels, restaurants, offices, events. Volume programs and custom commissions available.
+            </p>
+            <Link href="/business" className="label-caps text-charcoal/60 hover:text-charcoal transition-colors duration-300">
+              Learn more →
+            </Link>
+          </div>
+
+          <div className="border-t border-charcoal/10 pt-8">
+            <h3 className="font-display text-2xl font-light text-charcoal mb-3">Interiors</h3>
+            <p className="font-body text-sm text-warm-gray leading-[1.8] mb-6">
+              For interior designers and architects. Commission a piece designed to your brief.
+            </p>
+            <Link href="/interiors" className="label-caps text-charcoal/60 hover:text-charcoal transition-colors duration-300">
+              Learn more →
+            </Link>
+          </div>
+
         </div>
       </section>
+
     </div>
   );
 }

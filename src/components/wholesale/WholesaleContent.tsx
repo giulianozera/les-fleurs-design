@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 const VERTICALS = [
@@ -63,6 +64,21 @@ export function WholesaleContent() {
           <p className="font-body text-sm text-ivory/60 leading-[1.8] mt-8 max-w-md">
             Partner programs for hotels, retailers, florists, and interior designers who demand permanence without compromise.
           </p>
+          {/* Navigation to dedicated pages */}
+          <div className="flex flex-wrap gap-6 mt-10">
+            <Link
+              href="/business"
+              className="label-caps text-ivory/40 hover:text-ivory transition-colors duration-300 inline-flex items-center gap-1.5"
+            >
+              For Business <span aria-hidden="true">→</span>
+            </Link>
+            <Link
+              href="/interiors"
+              className="label-caps text-ivory/40 hover:text-ivory transition-colors duration-300 inline-flex items-center gap-1.5"
+            >
+              For Interiors <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 
