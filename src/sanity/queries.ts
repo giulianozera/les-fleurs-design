@@ -1,5 +1,5 @@
 import { groq } from 'next-sanity';
-import { sanityClient, isSanityConfigured } from './client';
+import { sanityClient, sanityWriteClient, isSanityConfigured } from './client';
 import type {
   Product,
   ProductSummary,
@@ -187,4 +187,24 @@ export async function getHomepageHero(): Promise<HomepageHero> {
   `;
   const data = await safeFetch<HomepageHero | null>(query, {}, null);
   return data ?? HERO_DEFAULTS;
+}
+
+// ── Stock management ──────────────────────────────────────────────────────────
+
+export async function decrementStock(
+  items: { productId: string; quantity: number }[],
+): Promise<void> {
+  if (!items.length) return;
+
+  const transaction = sanityWriteClient.transaction();
+
+  for (const item of items) {
+    transaction.patch(item.productId, (patch) =>
+      patch
+        .setIfMissing({ stockQuantity: 0 })
+        .dec({ stockQuantity: item.quantity })
+    );
+  }
+
+  await transaction.commit();
 }

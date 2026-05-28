@@ -4,6 +4,7 @@ import { getSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail, ADMIN } from '@/lib/resend';
 import { orderConfirmationHtml, orderAdminHtml } from '@/lib/emails';
 import { createShippingLabel } from '@/lib/shipping';
+import { decrementStock } from '@/sanity/queries';
 
 function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -90,7 +91,18 @@ export async function POST(req: NextRequest) {
       console.error('Supabase insert error:', err);
     }
 
-    // ── 2. Send confirmation emails ───────────────────────────────────────────
+    // ── 2. Decrement stock in Sanity ──────────────────────────────────────────
+    try {
+      await decrementStock(
+        items
+          .filter((i) => i.productId)
+          .map((i) => ({ productId: i.productId, quantity: i.quantity })),
+      );
+    } catch (err) {
+      console.error('Stock decrement error:', err);
+    }
+
+    // ── 3. Send confirmation emails ───────────────────────────────────────────
     if (customerEmail) {
       const emailData = {
         customerName: session.customer_details?.name ?? '',
@@ -118,7 +130,7 @@ export async function POST(req: NextRequest) {
         console.error('Email send error:', err);
       }
 
-      // ── 3. Generate shipping label → follow-up admin email ──────────────────
+      // ── 4. Generate shipping label → follow-up admin email ──────────────────
       if (addr?.line1 && addr.city && addr.state && addr.postal_code) {
         try {
           const label = await createShippingLabel({

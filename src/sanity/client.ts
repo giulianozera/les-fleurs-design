@@ -12,3 +12,12 @@ export const sanityClient = createClient({
   useCdn: false,
   token: process.env.SANITY_API_READ_TOKEN,
 });
+
+// Write client — used server-side only (webhook, admin actions)
+export const sanityWriteClient = createClient({
+  projectId: projectId || 'unconfigured',
+  dataset,
+  apiVersion: '2024-01-01',
+  useCdn: false,
+  token: process.env.SANITY_API_WRITE_TOKEN,
+});
