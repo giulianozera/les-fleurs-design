@@ -6,7 +6,7 @@ import { InquiryForm } from '@/components/b2b/InquiryForm';
 export const metadata: Metadata = {
   title: 'Interiors — Les Fleurs Design',
   description:
-    'Preserved rose arrangements for interior designers, architects, and residential projects. Commission bespoke pieces designed around your project's palette, scale, and material language.',
+    "Preserved rose arrangements for interior designers, architects, and residential projects. Commission bespoke pieces designed around your project's palette, scale, and material language.",
 };
 
 // ── Portfolio placeholder grid ────────────────────────────────────────────────
