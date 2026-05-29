@@ -8,10 +8,12 @@
   --color-warm-gray:  #6B6661;   /* warm gray — secondary text, captions */
   --color-stone:      #3A3733;   /* dark stone — hover states, accents */
   --color-gold:       #8A6F47;   /* muted gold — thin dividers and micro-icons only */
+  --color-rose:       #A06855;   /* warm dusty rose — story section accent */
 
   /* Typography */
   --font-display: var(--font-cormorant);
   --font-body:    var(--font-inter);
+  --font-script:  var(--font-italianno);
 
   /* Custom easing */
   --ease-luxury: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -84,4 +86,21 @@ img {
 .site-cursor-none,
 .site-cursor-none * {
   cursor: none !important;
+}
+
+/* Story section — drop-cap on lede paragraph */
+.story-lede::first-letter {
+  float: left;
+  font-family: var(--font-cormorant), serif;
+  font-size: 5.25rem;
+  font-weight: 400;
+  line-height: 0.82;
+  color: #A06855;
+  margin-right: 0.08em;
+  margin-top: 0.06em;
+}
+
+/* Script / Italianno utility */
+.font-script {
+  font-family: var(--font-italianno), cursive;
 }
