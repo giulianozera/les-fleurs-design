@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { ForHerSlider } from './ForHerSlider';
 import type { SliderImage } from './ForHerSlider';
+import { ForBusinessSlider } from './ForBusinessSlider';
 
 const cards = [
   {
@@ -81,6 +82,8 @@ export function BeyondTheGift({ maisonImages = [] }: { maisonImages?: SliderImag
               <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
                 {card.id === 'for-her' ? (
                   <ForHerSlider images={maisonImages} />
+                ) : card.id === 'for-business' ? (
+                  <ForBusinessSlider />
                 ) : (
                   <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
                 )}
