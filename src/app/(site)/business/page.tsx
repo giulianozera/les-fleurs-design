@@ -1,14 +1,50 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { CommissionForm } from '@/components/b2b/CommissionForm';
 import { InquiryForm } from '@/components/b2b/InquiryForm';
-import { BusinessCarousel } from '@/components/business/BusinessCarousel';
 
 export const metadata: Metadata = {
   title: 'For Business — Les Fleurs Design',
   description:
     'Preserved rose arrangements for hotels, restaurants, offices, and events. Custom commissions and volume programs for commercial spaces that demand distinction.',
 };
+
+// ── Portfolio image component ─────────────────────────────────────────────────
+
+function PortfolioImage({
+  src,
+  alt,
+  caption,
+  className = '',
+  imgClassName = 'object-cover',
+}: {
+  src: string;
+  alt: string;
+  caption: string;
+  className?: string;
+  imgClassName?: string;
+}) {
+  return (
+    <figure className="group flex flex-col">
+      <div className={`relative w-full overflow-hidden ${className}`}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className={`transition-transform duration-700 ease-out group-hover:scale-[1.02] ${imgClassName}`}
+        />
+      </div>
+      <figcaption className="mt-3.5 flex items-center gap-3">
+        <div className="w-5 h-px bg-[#A06855]/70 flex-shrink-0" />
+        <p className="font-body text-[11px] tracking-[0.18em] uppercase text-charcoal/70">
+          {caption}
+        </p>
+      </figcaption>
+    </figure>
+  );
+}
 
 // ── Selected pieces placeholder ───────────────────────────────────────────────
 
@@ -76,12 +112,59 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      {/* ── Portfolio carousel ────────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 border-b border-charcoal/10">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 mb-10">
-          <p className="label-caps text-warm-gray">Selected Projects</p>
+      {/* ── Portfolio gallery ─────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-24 md:py-32 border-b border-charcoal/10">
+        <p className="label-caps text-warm-gray mb-12">Selected Projects</p>
+
+        {/* Main row: Private club · Restaurant · Installation */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_0.6fr] gap-4">
+          <PortfolioImage
+            src="/business/private member club .png"
+            alt="Private members' club arrangement"
+            caption="Private Members' Club"
+            className="h-[340px] md:h-[480px]"
+            imgClassName="object-cover object-center"
+          />
+          <PortfolioImage
+            src="/business/restourant table.jpg"
+            alt="Restaurant table arrangement"
+            caption="Restaurant"
+            className="h-[340px] md:h-[480px]"
+            imgClassName="object-cover object-center"
+          />
+          <PortfolioImage
+            src="/business/event inistallation.JPG"
+            alt="Event floral installation"
+            caption="Event Installation"
+            className="h-[340px] md:h-[480px]"
+            imgClassName="object-cover object-top"
+          />
         </div>
-        <BusinessCarousel />
+
+        {/* Secondary row: Hotel lobby · Suite amenity · Corporate */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_0.75fr_1fr] gap-4 mt-8 items-end">
+          <PortfolioImage
+            src="/business/hotel lobby.jpg"
+            alt="Hotel lobby installation"
+            caption="Hotel Lobby"
+            className="h-[260px] md:h-[340px]"
+            imgClassName="object-cover object-center"
+          />
+          <PortfolioImage
+            src="/business/Suite_amenity_—_blue_porcelain_202605282258.jpeg"
+            alt="Suite amenity — blue porcelain vessel"
+            caption="Suite Amenity"
+            className="h-[380px] md:h-[480px]"
+            imgClassName="object-cover object-center"
+          />
+          <PortfolioImage
+            src="/business/corporate .png"
+            alt="Corporate reception arrangement"
+            caption="Corporate Reception"
+            className="h-[260px] md:h-[340px]"
+            imgClassName="object-cover object-center"
+          />
+        </div>
       </section>
 
       {/* ── Selected pieces ───────────────────────────────────────────────────── */}
