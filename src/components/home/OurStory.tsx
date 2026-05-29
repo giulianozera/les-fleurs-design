@@ -3,14 +3,16 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
+const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE_OUT } },
 };
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1.1, ease: 'easeOut' } },
+  visible: { opacity: 1, transition: { duration: 1.1, ease: 'easeOut' as const } },
 };
 
 export function OurStory() {
