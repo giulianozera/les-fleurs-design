@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { CommissionForm } from '@/components/b2b/CommissionForm';
 import { InquiryForm } from '@/components/b2b/InquiryForm';
@@ -9,17 +10,39 @@ export const metadata: Metadata = {
     'Preserved rose arrangements for hotels, restaurants, offices, and events. Custom commissions and volume programs for commercial spaces that demand distinction.',
 };
 
-// ── Portfolio placeholder grid ────────────────────────────────────────────────
+// ── Portfolio image component ─────────────────────────────────────────────────
 
-function PortfolioPlaceholder({ label, ratio }: { label: string; ratio: string }) {
+function PortfolioImage({
+  src,
+  alt,
+  caption,
+  className = '',
+  imgClassName = 'object-cover',
+}: {
+  src: string;
+  alt: string;
+  caption: string;
+  className?: string;
+  imgClassName?: string;
+}) {
   return (
-    <div
-      className="relative w-full bg-ivory-dark flex items-end p-4"
-      style={{ aspectRatio: ratio }}
-    >
-      {/* TODO: replace with <Image src="…" fill className="object-cover" alt="…" /> */}
-      <p className="label-caps text-charcoal/20 text-[9px]">{label}</p>
-    </div>
+    <figure className="group flex flex-col">
+      <div className={`relative w-full overflow-hidden ${className}`}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className={`transition-transform duration-700 ease-out group-hover:scale-[1.02] ${imgClassName}`}
+        />
+      </div>
+      <figcaption className="mt-3.5 flex items-center gap-3">
+        <div className="w-5 h-px bg-[#A06855]/70 flex-shrink-0" />
+        <p className="font-body text-[11px] tracking-[0.18em] uppercase text-charcoal/70">
+          {caption}
+        </p>
+      </figcaption>
+    </figure>
   );
 }
 
@@ -93,28 +116,57 @@ export default function BusinessPage() {
       <section className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-24 md:py-32 border-b border-charcoal/10">
         <p className="label-caps text-warm-gray mb-12">Selected Projects</p>
 
-        {/* TODO: replace placeholders with real portfolio images when available */}
-        {/* Editorial offset grid — left: tall portrait; right: landscape + portrait stacked */}
-        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-4">
-          {/* Left — full-height portrait */}
-          <PortfolioPlaceholder label="Hotel lobby installation" ratio="3/4" />
-          {/* Right — two stacked */}
-          <div className="flex flex-col gap-4">
-            <PortfolioPlaceholder label="Restaurant table arrangement" ratio="4/3" />
-            <PortfolioPlaceholder label="Suite amenity — blue porcelain" ratio="4/3" />
-          </div>
+        {/* ── Main row: Private club (landscape) · Restaurant (landscape) · Installation (portrait) ── */}
+        {/* All cells share a fixed height so the row stays aligned */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_0.6fr] gap-4">
+          <PortfolioImage
+            src="/business/private member club .png"
+            alt="Private members' club arrangement"
+            caption="Private Members' Club"
+            className="h-[340px] md:h-[480px]"
+            imgClassName="object-cover object-center"
+          />
+          <PortfolioImage
+            src="/business/restourant table.jpg"
+            alt="Restaurant table arrangement"
+            caption="Restaurant"
+            className="h-[340px] md:h-[480px]"
+            imgClassName="object-cover object-center"
+          />
+          <PortfolioImage
+            src="/business/event inistallation.JPG"
+            alt="Event floral installation"
+            caption="Event Installation"
+            className="h-[340px] md:h-[480px]"
+            imgClassName="object-cover object-top"
+          />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          <PortfolioPlaceholder label="Private members' club" ratio="4/3" />
-          <PortfolioPlaceholder label="Corporate reception" ratio="4/3" />
-          <PortfolioPlaceholder label="Event installation" ratio="4/3" />
+        {/* ── Secondary row: Hotel lobby · Suite amenity (portrait, taller) · Corporate ── */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_0.75fr_1fr] gap-4 mt-8 items-end">
+          <PortfolioImage
+            src="/business/hotel lobby.jpg"
+            alt="Hotel lobby installation"
+            caption="Hotel Lobby"
+            className="h-[260px] md:h-[340px]"
+            imgClassName="object-cover object-center"
+          />
+          {/* Suite amenity is a tall portrait — give it more height and use aspect ratio */}
+          <PortfolioImage
+            src="/business/Suite_amenity_—_blue_porcelain_202605282258.jpeg"
+            alt="Suite amenity — blue porcelain vessel"
+            caption="Suite Amenity"
+            className="h-[380px] md:h-[480px]"
+            imgClassName="object-cover object-center"
+          />
+          <PortfolioImage
+            src="/business/corporate .png"
+            alt="Corporate reception arrangement"
+            caption="Corporate Reception"
+            className="h-[260px] md:h-[340px]"
+            imgClassName="object-cover object-center"
+          />
         </div>
-
-        <p className="font-body text-xs text-warm-gray/50 mt-6">
-          {/* TODO: remove once real images are in */}
-          Portfolio images coming soon. Contact us to request a lookbook.
-        </p>
       </section>
 
       {/* ── Selected pieces ───────────────────────────────────────────────────── */}

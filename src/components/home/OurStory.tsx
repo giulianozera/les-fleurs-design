@@ -1,251 +1,159 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-// ── Animation helpers ─────────────────────────────────────────────────────────
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+};
 
-function fadeUp(delay = 0) {
-  return {
-    hidden: { opacity: 0, y: 28 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 1.0, delay, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
-    },
-  };
-}
-
-function fadeIn(delay = 0) {
-  return {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 1.2, delay, ease: 'easeOut' as const },
-    },
-  };
-}
-
-// ── Decorative rose ornament (reused from hero, scaled down) ──────────────────
-
-function RoseOrnament() {
-  return (
-    <svg
-      viewBox="-55 -55 110 110"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      className="w-14 h-14 opacity-30"
-    >
-      <defs>
-        <path id="st-po" d="M0,0 C-11,-4 -16,-16 -9,-29 C-5,-36 5,-36 9,-29 C16,-16 11,-4 0,0 Z" transform="translate(0,-5)" />
-        <path id="st-pm" d="M0,0 C-8,-3 -12,-12 -7,-22 C-4,-28 4,-28 7,-22 C12,-12 8,-3 0,0 Z" transform="translate(0,-3)" />
-      </defs>
-      <g>
-        <use href="#st-po" fill="#A06855" /><use href="#st-po" fill="#8A6F47" transform="rotate(60)" />
-        <use href="#st-po" fill="#A06855" transform="rotate(120)" /><use href="#st-po" fill="#8A6F47" transform="rotate(180)" />
-        <use href="#st-po" fill="#A06855" transform="rotate(240)" /><use href="#st-po" fill="#8A6F47" transform="rotate(300)" />
-      </g>
-      <g transform="rotate(30)">
-        <use href="#st-pm" fill="#7a6745" /><use href="#st-pm" fill="#968058" transform="rotate(60)" />
-        <use href="#st-pm" fill="#7a6745" transform="rotate(120)" /><use href="#st-pm" fill="#968058" transform="rotate(180)" />
-        <use href="#st-pm" fill="#7a6745" transform="rotate(240)" /><use href="#st-pm" fill="#968058" transform="rotate(300)" />
-      </g>
-      <circle r={5} fill="#4a3825" />
-      <circle r={2} fill="#2a1f12" />
-    </svg>
-  );
-}
-
-// ── Component ─────────────────────────────────────────────────────────────────
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 1.1, ease: 'easeOut' } },
+};
 
 export function OurStory() {
   return (
-    <section className="bg-ivory overflow-hidden">
-
-      {/* ── Atmospheric image strip ─────────────────────────────────────────── */}
-      <motion.div
-        className="relative w-full overflow-hidden"
-        style={{ height: 'clamp(240px, 38vw, 560px)' }}
-        variants={fadeIn(0)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
+    <section className="relative bg-[#F9F6F2] overflow-hidden">
+      {/* ── Atmospheric image strip ── */}
+      <div className="relative w-full h-[320px] md:h-[420px] overflow-hidden">
         <Image
           src="/sfondo.jpg"
-          alt="Les Fleurs Design — atelier"
+          alt="Les Fleurs atelier — detail"
           fill
-          priority={false}
-          className="object-cover object-center"
           sizes="100vw"
+          className="object-cover object-center"
+          priority={false}
         />
-        {/* Gradient veil — fades image into ivory at top and bottom */}
-        <div className="absolute inset-0 bg-gradient-to-b from-ivory/60 via-transparent to-ivory/80" />
+        {/* Gradient overlay: fades to section bg at bottom */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-[#F9F6F2]" />
+      </div>
 
-        {/* Chapter badge — centred on the image */}
+      {/* ── Main content ── */}
+      <div className="mx-auto max-w-[1320px] px-6 md:px-10 lg:px-16 pb-28 md:pb-36 -mt-20 md:-mt-28 relative z-10">
+
+        {/* Chapter badge */}
         <motion.div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-          variants={fadeUp(0.4)}
+          variants={fadeUp}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: '-80px' }}
+          className="mb-10 md:mb-14"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="h-px w-10 bg-gold/60" />
-            <p className="label-caps text-charcoal/50 tracking-[0.22em]">Chapter I — The Story</p>
-            <div className="h-px w-10 bg-gold/60" />
-          </div>
-          <p className="font-script text-[2.5rem] md:text-[3.5rem] leading-none text-rose">
-            our story
-          </p>
+          <span className="inline-flex items-center gap-3 tracking-[0.22em] text-[10px] uppercase text-[#A06855]">
+            {/* Rose ornament */}
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="4" fill="#A06855" fillOpacity="0.18" />
+              <circle cx="11" cy="11" r="1.5" fill="#A06855" />
+              {[0, 60, 120, 180, 240, 300].map((deg) => (
+                <ellipse
+                  key={deg}
+                  cx="11"
+                  cy="5"
+                  rx="2"
+                  ry="3.5"
+                  fill="#A06855"
+                  fillOpacity="0.55"
+                  transform={`rotate(${deg} 11 11)`}
+                />
+              ))}
+            </svg>
+            Our Story
+          </span>
         </motion.div>
-      </motion.div>
 
-      {/* ── Main content ────────────────────────────────────────────────────── */}
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-20 md:py-28">
-
-        {/* Display title */}
-        <motion.div
-          className="mb-16 md:mb-20"
-          variants={fadeUp(0)}
+        {/* Title */}
+        <motion.h2
+          variants={fadeUp}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-60px' }}
+          viewport={{ once: true, margin: '-80px' }}
+          className="font-display text-[clamp(2.25rem,5vw,4.5rem)] font-light italic text-[#1C1C1A] leading-[1.08] mb-14 md:mb-20 max-w-[720px]"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <RoseOrnament />
-          </div>
-          <h2 className="font-display text-[clamp(3rem,6.5vw,5.5rem)] font-light italic text-charcoal leading-[0.92]">
-            A still life that lasts.
-          </h2>
-          <div className="h-px w-full bg-charcoal/8 mt-12" />
-        </motion.div>
+          Flowers that last.<br />
+          A story worth telling.
+        </motion.h2>
 
         {/* Two-column body */}
-        <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr] gap-14 lg:gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr] gap-14 lg:gap-20 items-start">
 
-          {/* ── Left column — story body ─────────────────────────────────── */}
+          {/* ── Left: prose ── */}
           <motion.div
-            variants={fadeUp(0.1)}
+            variants={fadeIn}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
+            viewport={{ once: true, margin: '-60px' }}
+            className="space-y-7"
           >
-            {/* Lede — drop-cap */}
-            <p className="story-lede font-display text-[1.2rem] md:text-[1.35rem] italic text-charcoal leading-[1.75] mb-8 overflow-hidden">
-              My name is Matteo di Rosa, and I come from a family in Italy that has worked with flowers for four generations.
+            <p className="story-lede font-display text-lg md:text-xl leading-[1.7] text-[#1C1C1A]/85">
+              I grew up watching my grandmother arrange flowers before every Sunday dinner — not
+              for ceremony, but because she believed a room with a flower in it was a room that
+              cared about itself. That conviction stayed with me long after the blooms had faded.
             </p>
 
-            {/* Body paragraphs */}
-            <div className="space-y-6 font-body text-sm text-warm-gray leading-[2]">
-              <p>
-                I was raised between the cutting rooms and the cold storage of my family&rsquo;s atelier — in a small corner of Italy where the mornings smelled of wet leaves and rose stems, and where my grandfather taught me that a single bloom, handled correctly, could carry an entire room. My father arranged the villas. My mother arranged the churches. The work was quiet, exact, and never temporary in spirit, even when the flowers themselves were.
-              </p>
+            <p className="font-body text-base md:text-[17px] leading-[1.85] text-[#1C1C1A]/65">
+              Les Fleurs Design was born from a simple frustration: the most beautiful flowers
+              last days. The most beautiful spaces deserve something that endures. Working first
+              in Milan and now from Miami, I spent years studying preservation — the chemistry
+              of glycerin and pigment, the geometry of ceramic glazes, the patience a craftsman
+              brings to a single vessel. Every piece we make carries that same discipline.
+            </p>
 
-              <p>
-                Les Fleurs Design is the form that inheritance takes here. I founded the studio to bring our family&rsquo;s craft — the patience, the obsession with material, the refusal to accept that beauty must be brief — into a new{' '}
-                <em className="font-display not-italic" style={{ color: '#A06855' }}>language</em>.
-                {' '}Real roses. Real ceramic. Real permanence.
-              </p>
-
-              <p>
-                What we make today is the opposite of a cut bouquet. Roses preserved at peak bloom. Vessels hand-formed by independent artisans. Objects engineered to last a year on a console table, a hotel front desk, a dining room, a private suite. The flowers are still real — they have simply been given more time.
-              </p>
-
-              <p>
-                I am carrying my family&rsquo;s{' '}
-                <em className="font-display not-italic" style={{ color: '#A06855' }}>heritage</em>
-                {' '}across an ocean. The atelier here is small, but the conversation is the same one we&rsquo;ve been having for a hundred years: how does one make beauty worth keeping?
-              </p>
-            </div>
+            <p className="font-body text-base md:text-[17px] leading-[1.85] text-[#1C1C1A]/65">
+              Our roses are sourced from highland farms in Ecuador and Colombia, preserved using
+              a process that replaces their natural sap with food-grade glycerin — leaving them
+              soft to the touch, vivid in colour, and stable for over a year without water or
+              sunlight. The ceramics are thrown by hand in small batches, glazed in palettes we
+              develop in-house. Nothing is mass-produced. Everything is made to be noticed.
+            </p>
 
             {/* Signature */}
-            <div className="mt-14 pt-10 border-t border-charcoal/10">
-              <p className="font-script text-[2.75rem] leading-none text-charcoal mb-2">
+            <div className="pt-6 border-t border-[#A06855]/20">
+              <p
+                className="font-script text-3xl text-[#A06855] mb-1"
+                style={{ fontFamily: 'var(--font-italianno), cursive' }}
+              >
                 Matteo di Rosa
               </p>
-              <p className="label-caps text-warm-gray">— Founder &amp; Designer</p>
-            </div>
-
-            {/* CTA */}
-            <div className="mt-10">
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 label-caps text-charcoal/50 hover:text-charcoal transition-colors duration-300 group"
-              >
-                Read the full story
-                <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
-              </Link>
+              <p className="font-body text-xs tracking-[0.15em] uppercase text-[#1C1C1A]/40">
+                Founder, Les Fleurs Design
+              </p>
             </div>
           </motion.div>
 
-          {/* ── Right column — pull-quote aside ─────────────────────────── */}
-          <motion.aside
-            className="lg:border-l border-rose/30 lg:pl-14 flex flex-col gap-10"
-            style={{ borderColor: '#A06855' }}
-            variants={fadeUp(0.25)}
+          {/* ── Right: pull-quote ── */}
+          <motion.div
+            variants={fadeUp}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
+            viewport={{ once: true, margin: '-60px' }}
+            className="lg:pt-4 flex flex-col gap-10"
           >
-            {/* Pull-quote */}
-            <div>
-              <span
-                className="font-display text-6xl leading-none select-none opacity-20"
-                aria-hidden="true"
-                style={{ color: '#A06855' }}
-              >
-                &ldquo;
-              </span>
-              <blockquote className="font-display text-[clamp(1.4rem,2.4vw,2rem)] font-light italic text-charcoal leading-[1.4] mt-1">
-                A flower is never only a flower.{' '}
-                <span style={{ color: '#A06855' }}>
-                  It is a memory that quietly stays in the room.
-                </span>
-              </blockquote>
-              <div className="mt-6">
-                <p className="font-script text-xl" style={{ color: '#A06855' }}>
-                  — a family saying
-                </p>
-                <p className="label-caps text-warm-gray mt-2 text-[9px] tracking-[0.22em]">
-                  Passed Down Four Generations
-                </p>
-              </div>
-            </div>
+            {/* Pull-quote card */}
+            <blockquote className="relative pl-7 border-l-2 border-[#A06855]">
+              <p className="font-display text-2xl md:text-3xl font-light italic leading-[1.45] text-[#1C1C1A]/80">
+                &ldquo;A flower that lasts a year asks a different question than one that dies in a
+                week. It asks: what is this space trying to say about itself?&rdquo;
+              </p>
+              <footer className="mt-5 font-body text-xs tracking-[0.15em] uppercase text-[#A06855]/70">
+                — Matteo di Rosa
+              </footer>
+            </blockquote>
 
-            {/* Gold divider */}
-            <div className="w-8 h-px bg-gold" />
-
-            {/* Secondary paragraph */}
-            <p className="font-body text-sm text-warm-gray leading-[2]">
-              Every piece that leaves the studio begins in this conversation — between the growers our family has known for decades, the artisans who throw our ceramics by hand, and the room in front of us asking to feel a little more alive.
-            </p>
-
-            {/* Accent image — product close-up placeholder */}
-            <div className="relative w-full overflow-hidden bg-ivory-dark" style={{ aspectRatio: '4/3' }}>
+            {/* Detail image placeholder (replace with atelier / petal close-up) */}
+            <div className="relative aspect-[4/5] rounded-sm overflow-hidden bg-[#E8E0D5]">
               {/* TODO: replace with close-up atelier / petal detail photo */}
-              <div className="absolute inset-0 flex items-end p-4">
-                <p className="label-caps text-charcoal/20 text-[9px]">
+              <div className="absolute inset-0 flex items-end p-6">
+                <p className="font-body text-xs tracking-[0.12em] uppercase text-[#1C1C1A]/30">
                   Atelier detail — coming soon
                 </p>
               </div>
             </div>
-
-            {/* Italic tagline */}
-            <p
-              className="font-display text-lg italic"
-              style={{ color: '#A06855' }}
-            >
-              Crafted for permanence.
-              <br />
-              Designed for distinction.
-            </p>
-          </motion.aside>
+          </motion.div>
 
         </div>
       </div>
-
     </section>
   );
 }
