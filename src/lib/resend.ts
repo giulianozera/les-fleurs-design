@@ -13,5 +13,8 @@ export async function sendEmail(opts: {
   html: string;
 }): Promise<void> {
   if (!resend) return;
-  await resend.emails.send({ from: FROM, ...opts });
+  const { error } = await resend.emails.send({ from: FROM, ...opts });
+  if (error) {
+    console.error('Resend send failed:', { to: opts.to, subject: opts.subject, error });
+  }
 }

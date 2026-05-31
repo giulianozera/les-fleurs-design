@@ -129,7 +129,7 @@ export function Footer() {
             © {new Date().getFullYear()} Les Fleurs Design. All rights reserved.
           </p>
           <div className="flex items-center gap-3">
-            {['Visa', 'Mastercard', 'Amex', 'PayPal'].map((method) => (
+            {['Visa', 'Mastercard', 'Amex'].map((method) => (
               <span key={method} className="label-caps text-[9px] text-ivory/25 border border-ivory/10 px-1.5 py-0.5 rounded-sm">
                 {method}
               </span>

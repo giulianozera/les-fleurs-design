@@ -109,6 +109,17 @@ export async function createShippingLabel(opts: {
   };
 }
 
+// Build a customer-facing tracking URL from the carrier + tracking code.
+export function trackingUrl(carrier: string, code: string): string | null {
+  if (!code) return null;
+  const c = (carrier ?? '').toUpperCase();
+  const t = encodeURIComponent(code);
+  if (c.includes('UPS')) return `https://www.ups.com/track?tracknum=${t}`;
+  if (c.includes('USPS')) return `https://tools.usps.com/go/TrackConfirmAction?tLabels=${t}`;
+  if (c.includes('FEDEX')) return `https://www.fedex.com/fedextrack/?trknbr=${t}`;
+  return `https://parcelsapp.com/en/tracking/${t}`;
+}
+
 // Stripe-formatted shipping options for checkout session creation
 export function toStripeShippingOptions(rates: ShippingRate[]) {
   return rates.map((rate) => ({

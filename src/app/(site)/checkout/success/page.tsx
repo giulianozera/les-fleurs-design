@@ -70,8 +70,8 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           </Link>
         </div>
 
-        <p className="font-body text-xs text-charcoal/30 mt-12">
-          Questions? Email us at hello@lesfleursdesign.com
+        <p className="font-body text-xs text-warm-gray mt-12">
+          Questions? Email us at <a href="mailto:hello@lesfleursdesign.com" className="underline hover:text-charcoal transition-colors">hello@lesfleursdesign.com</a>
         </p>
       </div>
     </div>

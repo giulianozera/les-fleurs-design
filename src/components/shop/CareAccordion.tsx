@@ -22,7 +22,7 @@ export function CareAccordion({ instructions }: CareAccordionProps) {
     <Accordion.Root type="single" collapsible className="border-t border-charcoal/10">
       <Accordion.Item value="care" className="border-b border-charcoal/10">
         <Accordion.Header>
-          <Accordion.Trigger className="group flex w-full items-center justify-between py-5 text-left focus:outline-none">
+          <Accordion.Trigger className="group flex w-full items-center justify-between py-5 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-charcoal rounded-sm">
             <p className="label-caps text-charcoal">Care Instructions</p>
             <ChevronRight
               size={14}
@@ -45,7 +45,7 @@ export function CareAccordion({ instructions }: CareAccordionProps) {
 
       <Accordion.Item value="shipping-info" className="border-b border-charcoal/10">
         <Accordion.Header>
-          <Accordion.Trigger className="group flex w-full items-center justify-between py-5 text-left focus:outline-none">
+          <Accordion.Trigger className="group flex w-full items-center justify-between py-5 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-charcoal rounded-sm">
             <p className="label-caps text-charcoal">Shipping Information</p>
             <ChevronRight
               size={14}

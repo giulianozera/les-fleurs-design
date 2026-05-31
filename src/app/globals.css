@@ -104,3 +104,15 @@ img {
 .font-script {
   font-family: var(--font-italianno), cursive;
 }
+
+/* Respect reduced-motion: neutralize CSS animations/transitions for vestibular-sensitive users */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -9,13 +9,19 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     zip = String(body.zip ?? '').trim();
-    weightGrams = Number(body.weightGrams ?? 500);
-    orderSubtotal = Number(body.orderSubtotal ?? 0);
+    const w = Number(body.weightGrams);
+    weightGrams = Number.isFinite(w) && w > 0 ? w : 500;
+    const s = Number(body.orderSubtotal);
+    orderSubtotal = Number.isFinite(s) && s >= 0 ? s : 0;
     if (!/^\d{5}$/.test(zip)) throw new Error('Invalid ZIP');
   } catch {
     return Response.json({ error: 'Provide a valid 5-digit ZIP code.' }, { status: 400 });
   }
 
-  const rates = await getShippingRates(zip, weightGrams, orderSubtotal);
-  return Response.json({ rates });
+  try {
+    const rates = await getShippingRates(zip, weightGrams, orderSubtotal);
+    return Response.json({ rates });
+  } catch {
+    return Response.json({ error: 'Shipping estimate is briefly unavailable. Please try again.' }, { status: 502 });
+  }
 }

@@ -107,6 +107,8 @@ export function Header() {
 
       {/* Mobile menu overlay */}
       <div
+        aria-hidden={!menuOpen}
+        inert={!menuOpen ? true : undefined}
         className={cn(
           'md:hidden fixed inset-0 top-[72px] bg-ivory flex flex-col px-6 pt-12 pb-10 transition-all duration-500',
           menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'

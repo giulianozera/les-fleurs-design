@@ -38,7 +38,7 @@ export function FooterNewsletter() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your email"
-          className="flex-1 bg-transparent font-body text-sm text-ivory placeholder:text-ivory/30 outline-none"
+          className="flex-1 bg-transparent font-body text-sm text-ivory placeholder:text-ivory/30 outline-none focus-visible:ring-1 focus-visible:ring-ivory/40"
           aria-label="Email for newsletter"
         />
         <button
@@ -51,7 +51,7 @@ export function FooterNewsletter() {
         </button>
       </div>
       {state === 'error' && (
-        <p className="font-body text-xs text-red-400 mt-2">Something went wrong. Try again.</p>
+        <p role="alert" className="font-body text-xs text-red-400 mt-2">Something went wrong. Try again.</p>
       )}
     </form>
   );

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { useCartStore, useCartSubtotal } from '@/store/cartStore';
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/shipping';
 
 export function CartContents() {
   const { items, removeItem, updateQuantity, clearCart } = useCartStore();
@@ -13,8 +14,10 @@ export function CartContents() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  const FREE_SHIPPING_THRESHOLD = 200;
+  const MAX_QTY_PER_ITEM = 99;
   const toFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
 
   async function handleCheckout() {
@@ -31,12 +34,19 @@ export function CartContents() {
         throw new Error(data.error ?? 'Checkout failed. Please try again.');
       }
       const { url } = await res.json();
+      if (!url || typeof url !== 'string') throw new Error('Checkout failed. Please try again.');
       clearCart();
       router.push(url);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.');
       setLoading(false);
     }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-6 py-24" />
+    );
   }
 
   if (items.length === 0) {
@@ -128,19 +138,21 @@ export function CartContents() {
                   {/* Quantity stepper */}
                   <div className="flex items-center border border-charcoal/20 w-fit">
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                      disabled={item.quantity <= 1}
                       className="w-8 h-8 flex items-center justify-center text-charcoal/50 hover:text-charcoal hover:bg-ivory-dark transition-colors duration-200 text-sm"
-                      aria-label="Decrease quantity"
+                      aria-label={`Decrease quantity of ${item.title}`}
                     >
                       −
                     </button>
-                    <span className="w-8 text-center font-body text-sm text-charcoal">
+                    <span className="w-8 text-center font-body text-sm text-charcoal" aria-live="polite">
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.id, Math.min(MAX_QTY_PER_ITEM, item.quantity + 1))}
+                      disabled={item.quantity >= MAX_QTY_PER_ITEM}
                       className="w-8 h-8 flex items-center justify-center text-charcoal/50 hover:text-charcoal hover:bg-ivory-dark transition-colors duration-200 text-sm"
-                      aria-label="Increase quantity"
+                      aria-label={`Increase quantity of ${item.title}`}
                     >
                       +
                     </button>
@@ -170,12 +182,12 @@ export function CartContents() {
             </div>
           </div>
 
-          {toFreeShipping > 0 && (
+          {FREE_SHIPPING_THRESHOLD > 0 && toFreeShipping > 0 && (
             <p className="font-body text-xs text-warm-gray mb-6 border-t border-charcoal/10 pt-4">
               Add ${toFreeShipping.toFixed(0)} more for free shipping
             </p>
           )}
-          {toFreeShipping <= 0 && (
+          {FREE_SHIPPING_THRESHOLD > 0 && toFreeShipping <= 0 && (
             <p className="font-body text-xs text-gold mb-6 border-t border-charcoal/10 pt-4">
               You qualify for free shipping
             </p>
@@ -187,12 +199,13 @@ export function CartContents() {
           </div>
 
           {error && (
-            <p className="font-body text-xs text-red-600 mb-4">{error}</p>
+            <p className="font-body text-xs text-red-600 mb-4" role="alert">{error}</p>
           )}
 
           <button
             onClick={handleCheckout}
             disabled={loading}
+            aria-busy={loading}
             className="w-full h-12 bg-charcoal text-ivory label-caps hover:bg-stone transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Redirecting…' : 'Proceed to Checkout'}

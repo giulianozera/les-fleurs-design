@@ -42,7 +42,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               onClick={() => setActiveIndex(i)}
               className={cn(
                 'relative flex-shrink-0 w-16 overflow-hidden bg-ivory-dark transition-all duration-200',
-                'focus:outline-none',
+                'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-charcoal focus-visible:ring-offset-1',
                 i === activeIndex
                   ? 'ring-1 ring-charcoal ring-offset-1'
                   : 'opacity-50 hover:opacity-80',

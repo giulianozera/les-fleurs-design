@@ -281,7 +281,7 @@ export function ProductOptions({ product, initialColorSlug }: ProductOptionsProp
         </div>
 
         {zipError && (
-          <p className="font-body text-xs text-red-500 mt-2">{zipError}</p>
+          <p role="alert" className="font-body text-xs text-red-500 mt-2">{zipError}</p>
         )}
 
         {zipRates && zipRates.length > 0 && (

@@ -63,6 +63,9 @@ export interface OrderEmailData {
     trackingCode: string;
     carrier: string;
   };
+  trackingUrl?: string | null;
+  // Magic link (admin email only) to mark the order shipped & notify the customer.
+  shipUrl?: string | null;
 }
 
 export function orderConfirmationHtml(data: OrderEmailData): string {
@@ -93,7 +96,13 @@ export function orderConfirmationHtml(data: OrderEmailData): string {
       </tr>
     </table>
     ${divider()}
-    ${p('Your roses will be shipped within 2–3 business days. You\'ll receive a tracking number by email once dispatched.')}
+    ${
+      data.label?.trackingCode
+        ? `${p(`Your roses will ship within 2–3 business days. Track your order any time:`)}
+           ${p(`<strong>${data.label.carrier || 'Carrier'}:</strong> ${data.label.trackingCode}`)}
+           ${data.trackingUrl ? btn(data.trackingUrl, 'Track Your Order') : ''}`
+        : p('Your roses will be shipped within 2–3 business days. You\'ll receive a tracking number by email once dispatched.')
+    }
     ${p('Questions? Reply to this email or reach us at <a href="mailto:hello@lesfleursdesign.com" style="color:#8A6F47;">hello@lesfleursdesign.com</a>')}
   `);
 }
@@ -120,7 +129,29 @@ export function orderAdminHtml(data: OrderEmailData): string {
     ${addressBlock ? p(`<strong>Ship to:</strong><br>${addressBlock}`) : ''}
     ${p(`<strong>Items:</strong><br>${itemList}`)}
     ${p(`<strong>Total:</strong> $${total}`)}
-    ${data.label ? `${divider()}${p(`<strong>Tracking:</strong> ${data.label.carrier} · ${data.label.trackingCode}`)}${btn(data.label.labelUrl, 'Print Shipping Label')}` : ''}
+    ${data.label ? `${divider()}${p(`<strong>Tracking:</strong> ${data.label.carrier} · ${data.label.trackingCode}`)}${data.label.labelUrl ? btn(data.label.labelUrl, 'Print Shipping Label') : ''}` : `${divider()}${p('<strong>No shipping label was generated</strong> for this order — check EasyPost (account funding / carrier setup) and create the label manually.')}`}
+    ${data.shipUrl ? `${p('When you\'ve handed the box to the carrier, mark it shipped — this emails the customer their tracking number:')}${btn(data.shipUrl, 'Mark Shipped &amp; Notify Customer')}` : ''}
+  `);
+}
+
+// ── Order shipped (to customer) ───────────────────────────────────────────────
+
+export interface ShippedEmailData {
+  customerName: string;
+  carrier: string;
+  trackingCode: string;
+  trackingUrl?: string | null;
+}
+
+export function orderShippedHtml(data: ShippedEmailData): string {
+  return layout(`
+    ${h1(`Your order is on its way${data.customerName ? `, ${data.customerName.split(' ')[0]}` : ''}.`)}
+    ${p('Your preserved roses have been dispatched. Here are your tracking details:')}
+    ${divider()}
+    ${p(`<strong>${data.carrier || 'Carrier'}:</strong> ${data.trackingCode || '—'}`)}
+    ${data.trackingUrl ? btn(data.trackingUrl, 'Track Your Order') : ''}
+    ${divider()}
+    ${p('Questions? Reply to this email or reach us at <a href="mailto:hello@lesfleursdesign.com" style="color:#8A6F47;">hello@lesfleursdesign.com</a>')}
   `);
 }
 
