@@ -9,7 +9,6 @@ import { useCartCount } from '@/store/cartStore';
 
 const navLinks = [
   { href: '/shop', label: 'Shop' },
-  { href: '/business', label: 'Business' },
   { href: '/interiors', label: 'Interiors' },
   { href: '/about', label: 'Story' },
   { href: '/contact', label: 'Contact' },

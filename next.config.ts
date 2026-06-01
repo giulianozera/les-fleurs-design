@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // The commercial section was consolidated from /business into /interiors.
+      { source: '/business', destination: '/interiors', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

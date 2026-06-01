@@ -393,7 +393,7 @@ export function AboutContent() {
           CTA Footer
       ══════════════════════════════════════════════════════════ */}
       <section className="mx-auto max-w-[1100px] px-6 md:px-10 lg:px-8 py-24 md:py-32">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {[
             {
               title: 'Shop the Collection',
@@ -402,14 +402,8 @@ export function AboutContent() {
               cta: 'Browse →',
             },
             {
-              title: 'For Business',
-              body: 'Hotels, restaurants, offices, events. Volume programs and custom commissions.',
-              href: '/business',
-              cta: 'Learn more →',
-            },
-            {
               title: 'Interiors',
-              body: 'For interior designers and architects. Commission a piece designed to your brief.',
+              body: 'Hotels, restaurants, offices, retail, and residences. Pieces commissioned around the space.',
               href: '/interiors',
               cta: 'Learn more →',
             },

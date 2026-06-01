@@ -127,8 +127,8 @@ export function HeroLesFleurs({
   subhead = 'A design piece for hotels, restaurants, and the spaces that demand distinction — as much as it is a gift for the woman who deserves more than a bouquet.',
   primaryCtaLabel = 'Shop the Collection',
   primaryCtaHref = '/shop',
-  secondaryCtaLabel = 'For Business',
-  secondaryCtaHref = '/business',
+  secondaryCtaLabel = 'Interiors',
+  secondaryCtaHref = '/interiors',
   scrollHintLabel = 'Scroll',
 }: HeroProps) {
   const reducedMotion = useReducedMotion();

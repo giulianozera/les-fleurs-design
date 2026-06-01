@@ -194,6 +194,34 @@ export function wholesaleAdminHtml(data: WholesaleAdminData): string {
   `);
 }
 
+// ── Interiors project inquiry (admin) ─────────────────────────────────────────
+
+export interface InteriorsInquiryData {
+  name: string;
+  business?: string;
+  role?: string;
+  email: string;
+  phone?: string;
+  spaceType?: string;
+  budget?: string;
+  description: string;
+}
+
+export function interiorsInquiryAdminHtml(data: InteriorsInquiryData): string {
+  return layout(`
+    ${h1('New Interiors inquiry.')}
+    ${p(`<strong>Name:</strong> ${data.name}${data.role ? ` · ${data.role}` : ''}`)}
+    ${p(`<strong>Business / Firm:</strong> ${data.business || '—'}`)}
+    ${p(`<strong>Email:</strong> ${data.email}`)}
+    ${data.phone ? p(`<strong>Phone:</strong> ${data.phone}`) : ''}
+    ${divider()}
+    ${p(`<strong>Type of space:</strong> ${data.spaceType || '—'}`)}
+    ${data.budget ? p(`<strong>Budget / volume:</strong> ${data.budget}`) : ''}
+    ${divider()}
+    ${p(`<strong>Project:</strong><br>${data.description.replace(/\n/g, '<br>')}`)}
+  `);
+}
+
 // ── Contact admin notification ────────────────────────────────────────────────
 
 export interface ContactEmailData {

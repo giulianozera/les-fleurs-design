@@ -11,7 +11,6 @@ const shopLinks = [
 
 const companyLinks = [
   { href: '/about', label: 'Our Story' },
-  { href: '/business', label: 'Business' },
   { href: '/interiors', label: 'Interiors' },
   { href: '/wholesale', label: 'Wholesale & B2B' },
   { href: '/contact', label: 'Contact' },

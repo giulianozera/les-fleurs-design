@@ -67,12 +67,6 @@ export function WholesaleContent() {
           {/* Navigation to dedicated pages */}
           <div className="flex flex-wrap gap-6 mt-10">
             <Link
-              href="/business"
-              className="label-caps text-ivory/40 hover:text-ivory transition-colors duration-300 inline-flex items-center gap-1.5"
-            >
-              For Business <span aria-hidden="true">→</span>
-            </Link>
-            <Link
               href="/interiors"
               className="label-caps text-ivory/40 hover:text-ivory transition-colors duration-300 inline-flex items-center gap-1.5"
             >

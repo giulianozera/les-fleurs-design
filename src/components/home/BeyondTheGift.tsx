@@ -16,18 +16,11 @@ const cards = [
     cta: 'Shop Gifts',
   },
   {
-    id: 'for-business',
-    title: 'For Business',
-    body: 'Hotels, restaurants, offices, events. A signature piece for spaces that demand distinction.',
-    href: '/business',
-    cta: 'Explore Business',
-  },
-  {
     id: 'for-interiors',
     title: 'Interiors',
-    body: 'Commission a piece designed around your project — palette, scale, material, intention.',
+    body: 'Hotels, restaurants, offices, retail, and residences. A signature piece, designed around the space.',
     href: '/interiors',
-    cta: 'Work With Us',
+    cta: 'Explore Interiors',
   },
 ];
 
@@ -69,7 +62,7 @@ export function BeyondTheGift({ maisonImages = [] }: { maisonImages?: SliderImag
 
       {/* Three-column grid */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-3 gap-5"
+        className="grid grid-cols-1 md:grid-cols-2 gap-5"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
@@ -82,10 +75,8 @@ export function BeyondTheGift({ maisonImages = [] }: { maisonImages?: SliderImag
               <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
                 {card.id === 'for-her' ? (
                   <ForHerSlider images={maisonImages} />
-                ) : card.id === 'for-business' ? (
-                  <ForBusinessSlider />
                 ) : (
-                  <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
+                  <ForBusinessSlider />
                 )}
               </div>
 
