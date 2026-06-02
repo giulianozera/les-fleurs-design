@@ -35,6 +35,7 @@ export function Header() {
   }, [menuOpen]);
 
   return (
+    <>
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
@@ -104,12 +105,17 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile menu overlay */}
+    </header>
+
+      {/* Mobile menu overlay — kept as a SIBLING of <header> (not a child) so the
+          header's backdrop-blur doesn't become the containing block for this fixed
+          element and collapse it. Viewport-fixed, solid bg-ivory, z-40 (just under
+          the header bar) keeps the links fully legible over page content. */}
       <div
         aria-hidden={!menuOpen}
         inert={!menuOpen ? true : undefined}
         className={cn(
-          'md:hidden fixed inset-0 top-[72px] bg-ivory flex flex-col px-6 pt-12 pb-10 transition-all duration-500',
+          'md:hidden fixed inset-x-0 top-[72px] bottom-0 z-40 bg-ivory flex flex-col px-6 pt-12 pb-10 transition-all duration-500',
           menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         )}
       >
@@ -129,6 +135,6 @@ export function Header() {
           <p className="label-caps text-charcoal/40">Quiet luxury, in full bloom.</p>
         </div>
       </div>
-    </header>
+    </>
   );
 }
