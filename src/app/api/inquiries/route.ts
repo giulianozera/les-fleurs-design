@@ -2,32 +2,15 @@ import type { NextRequest } from 'next/server';
 import { getSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail, ADMIN } from '@/lib/resend';
 import { interiorsInquiryAdminHtml, wholesaleConfirmationHtml } from '@/lib/emails';
+import { guardForm } from '@/lib/formGuard';
+import { inquirySchema } from '@/lib/formSchemas';
 
 export async function POST(req: NextRequest) {
-  let name: string,
-    business: string,
-    role: string,
-    email: string,
-    phone: string,
-    spaceType: string,
-    budget: string,
-    description: string;
+  const guard = await guardForm({ req, name: 'inquiries', schema: inquirySchema });
+  if (guard.ok === 'spam') return Response.json({ ok: true });
+  if (!guard.ok) return guard.response;
 
-  try {
-    const body = await req.json();
-    name = String(body.name ?? '').trim();
-    business = String(body.business ?? '').trim();
-    role = String(body.role ?? '').trim();
-    email = String(body.email ?? '').trim();
-    phone = String(body.phone ?? '').trim();
-    spaceType = String(body.spaceType ?? '').trim();
-    budget = String(body.budget ?? '').trim();
-    description = String(body.description ?? '').trim();
-    if (!name || !business || !email || !description) throw new Error();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error();
-  } catch {
-    return Response.json({ error: 'Please fill in all required fields.' }, { status: 400 });
-  }
+  const { name, business, role, email, phone, spaceType, budget, description } = guard.data;
 
   // Save to Supabase (requires migration 003 for the extra columns).
   const supabase = getSupabaseAdminClient();

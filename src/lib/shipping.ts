@@ -1,3 +1,5 @@
+import { FREE_SHIPPING_THRESHOLD, type ShippingRate } from './shippingConfig';
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const EasyPost = require('@easypost/api') as new (key: string) => {
   Shipment: {
@@ -6,16 +8,10 @@ const EasyPost = require('@easypost/api') as new (key: string) => {
   };
 };
 
-export interface ShippingRate {
-  id: string;
-  carrier: string;
-  service: string;
-  displayName: string;
-  price: number; // USD
-  deliveryDays: string;
-}
-
-export const FREE_SHIPPING_THRESHOLD = 0;
+// Client-safe constants/types live in ./shippingConfig (no Node deps). Re-export
+// them so existing server-side imports of '@/lib/shipping' keep working, while
+// client components import from '@/lib/shippingConfig' directly.
+export { FREE_SHIPPING_THRESHOLD, type ShippingRate } from './shippingConfig';
 
 const STANDARD: ShippingRate = {
   id: 'ups_ground',
@@ -50,7 +46,8 @@ export async function getShippingRates(
   orderSubtotal: number,
 ): Promise<ShippingRate[]> {
   if (orderSubtotal >= FREE_SHIPPING_THRESHOLD && FREE_SHIPPING_THRESHOLD > 0) {
-    return [{ ...FREE }];
+    // Free standard shipping over the threshold; express remains paid.
+    return [{ ...FREE }, { ...EXPRESS }];
   }
   return [{ ...STANDARD }, { ...EXPRESS }];
 }

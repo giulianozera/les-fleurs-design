@@ -49,7 +49,7 @@ export function BeyondTheGift({ maisonImages = [] }: { maisonImages?: SliderImag
         viewport={{ once: true, margin: '-80px' }}
         variants={stagger}
       >
-        <motion.p className="label-caps text-warm-gray mb-3" variants={fadeUp}>
+        <motion.p className="label-caps text-charcoal/60 mb-3" variants={fadeUp}>
           Beyond the Gift
         </motion.p>
         <motion.h2
@@ -86,14 +86,15 @@ export function BeyondTheGift({ maisonImages = [] }: { maisonImages?: SliderImag
                   <h3 className="font-display text-xl font-light text-charcoal mb-1.5">
                     {card.title}
                   </h3>
-                  <p className="font-body text-sm text-warm-gray leading-relaxed">
+                  <p className="font-body text-sm text-charcoal/70 leading-relaxed">
                     {card.body}
                   </p>
-                  <p className="label-caps text-charcoal/40 mt-3 inline-flex items-center gap-1.5 group-hover:text-charcoal transition-colors duration-300">
+                  <p className="label-caps text-charcoal/65 mt-3 inline-flex items-center gap-1.5 group-hover:text-charcoal transition-colors duration-300">
                     {card.cta}
                     <ArrowRight
                       size={10}
                       strokeWidth={1.5}
+                      aria-hidden="true"
                       className="transition-transform duration-300 group-hover:translate-x-0.5"
                     />
                   </p>

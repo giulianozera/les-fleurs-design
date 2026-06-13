@@ -1,6 +1,38 @@
+import { legalName, mailingAddress, supportEmail, formatMailingAddress } from '@/lib/site-config';
+import { signNewsletterEmail } from '@/lib/orderToken';
+import { escapeHtml } from '@/lib/escapeHtml';
+
+// All dynamic, user-derived values (customer names, addresses, cart option
+// labels, inquiry text, emails) are passed through escapeHtml() before they
+// enter the HTML so a crafted submission can't inject links/markup/tracking
+// pixels into the inbox. System values (our own URLs, EasyPost label URLs) are
+// trusted and left intact.
+
 // ── Shared layout ─────────────────────────────────────────────────────────────
 
-function layout(body: string): string {
+interface LayoutOptions {
+  // Marketing email ONLY. When provided, renders a one-click unsubscribe line in
+  // the footer. Transactional email (order confirmation/admin/shipped/inquiries)
+  // omit this so they never show "unsubscribe" — CAN-SPAM requires the physical
+  // address on all commercial email, but the unsubscribe mechanism only applies
+  // to messages whose primary purpose is commercial advertising/promotion.
+  unsubscribeUrl?: string;
+}
+
+function layout(body: string, options: LayoutOptions = {}): string {
+  const { unsubscribeUrl } = options;
+  // CAN-SPAM §7704(a)(5)(A)(iii): every commercial email must carry the sender's
+  // valid physical postal address. We surface the legal entity name + mailing
+  // address from the single source of truth in site-config.
+  const postalAddress = formatMailingAddress(mailingAddress);
+
+  const unsubscribeLine = unsubscribeUrl
+    ? `
+          <p style="margin:8px 0 0;font-size:11px;color:#6B6661;line-height:1.6;">
+            Don't want these emails? <a href="${unsubscribeUrl}" style="color:#6B6661;">Unsubscribe</a>.
+          </p>`
+    : '';
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -19,8 +51,8 @@ function layout(body: string): string {
         <!-- Footer -->
         <tr><td style="padding:24px 0 0;">
           <p style="margin:0;font-size:11px;color:#6B6661;line-height:1.6;">
-            Les Fleurs Design · Miami, FL · <a href="mailto:hello@lesfleursdesign.com" style="color:#6B6661;">hello@lesfleursdesign.com</a>
-          </p>
+            ${legalName} · ${postalAddress} · <a href="mailto:${supportEmail}" style="color:#6B6661;">${supportEmail}</a>
+          </p>${unsubscribeLine}
         </td></tr>
       </table>
     </td></tr>
@@ -40,6 +72,9 @@ const divider = () =>
 
 const btn = (href: string, label: string) =>
   `<a href="${href}" style="display:inline-block;margin-top:8px;padding:12px 28px;background:#0F0F0F;color:#EDE6DA;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;">${label}</a>`;
+
+// First name, escaped, for greetings. Empty string when no name.
+const firstName = (name: string) => escapeHtml((name ?? '').split(' ')[0] ?? '');
 
 // ── Order confirmation (to customer) ─────────────────────────────────────────
 
@@ -74,7 +109,7 @@ export function orderConfirmationHtml(data: OrderEmailData): string {
       (i) => `
       <tr>
         <td style="padding:8px 0;font-size:13px;color:#0F0F0F;">
-          ${i.title}${i.colorName ? ` · ${i.colorName}` : ''}${i.potName ? ` · ${i.potName}` : ''} × ${i.quantity}
+          ${escapeHtml(i.title)}${i.colorName ? ` · ${escapeHtml(i.colorName)}` : ''}${i.potName ? ` · ${escapeHtml(i.potName)}` : ''} × ${i.quantity}
         </td>
         <td align="right" style="padding:8px 0;font-size:13px;color:#0F0F0F;">$${(i.price * i.quantity).toLocaleString()}</td>
       </tr>`,
@@ -84,7 +119,7 @@ export function orderConfirmationHtml(data: OrderEmailData): string {
   const total = (data.totalCents / 100).toLocaleString('en-US', { minimumFractionDigits: 2 });
 
   return layout(`
-    ${h1(`Thank you${data.customerName ? `, ${data.customerName.split(' ')[0]}` : ''}.`)}
+    ${h1(`Thank you${data.customerName ? `, ${firstName(data.customerName)}` : ''}.`)}
     ${p('Your order has been confirmed. We\'re carefully preparing your arrangement.')}
     ${divider()}
     <table width="100%" cellpadding="0" cellspacing="0">${itemRows}</table>
@@ -99,7 +134,7 @@ export function orderConfirmationHtml(data: OrderEmailData): string {
     ${
       data.label?.trackingCode
         ? `${p(`Your roses will ship within 2–3 business days. Track your order any time:`)}
-           ${p(`<strong>${data.label.carrier || 'Carrier'}:</strong> ${data.label.trackingCode}`)}
+           ${p(`<strong>${escapeHtml(data.label.carrier || 'Carrier')}:</strong> ${escapeHtml(data.label.trackingCode)}`)}
            ${data.trackingUrl ? btn(data.trackingUrl, 'Track Your Order') : ''}`
         : p('Your roses will be shipped within 2–3 business days. You\'ll receive a tracking number by email once dispatched.')
     }
@@ -111,7 +146,7 @@ export function orderConfirmationHtml(data: OrderEmailData): string {
 
 export function orderAdminHtml(data: OrderEmailData): string {
   const itemList = data.items
-    .map((i) => `${i.title} × ${i.quantity} ($${i.price})`)
+    .map((i) => `${escapeHtml(i.title)} × ${i.quantity} ($${i.price})`)
     .join('<br>');
   const total = (data.totalCents / 100).toLocaleString('en-US', { minimumFractionDigits: 2 });
 
@@ -119,17 +154,18 @@ export function orderAdminHtml(data: OrderEmailData): string {
   const addressBlock = addr
     ? [addr.line1, addr.line2, addr.city, addr.state, addr.postal_code, addr.country]
         .filter(Boolean)
+        .map((part) => escapeHtml(part))
         .join(', ')
     : null;
 
   return layout(`
     ${h1('New order received.')}
-    ${p(`<strong>Customer:</strong> ${data.customerName || '—'} (${data.customerEmail})`)}
-    ${data.customerPhone ? p(`<strong>Phone:</strong> ${data.customerPhone}`) : ''}
+    ${p(`<strong>Customer:</strong> ${escapeHtml(data.customerName || '—')} (${escapeHtml(data.customerEmail)})`)}
+    ${data.customerPhone ? p(`<strong>Phone:</strong> ${escapeHtml(data.customerPhone)}`) : ''}
     ${addressBlock ? p(`<strong>Ship to:</strong><br>${addressBlock}`) : ''}
     ${p(`<strong>Items:</strong><br>${itemList}`)}
     ${p(`<strong>Total:</strong> $${total}`)}
-    ${data.label ? `${divider()}${p(`<strong>Tracking:</strong> ${data.label.carrier} · ${data.label.trackingCode}`)}${data.label.labelUrl ? btn(data.label.labelUrl, 'Print Shipping Label') : ''}` : `${divider()}${p('<strong>No shipping label was generated</strong> for this order — check EasyPost (account funding / carrier setup) and create the label manually.')}`}
+    ${data.label ? `${divider()}${p(`<strong>Tracking:</strong> ${escapeHtml(data.label.carrier)} · ${escapeHtml(data.label.trackingCode)}`)}${data.label.labelUrl ? btn(data.label.labelUrl, 'Print Shipping Label') : ''}` : `${divider()}${p('<strong>No shipping label was generated</strong> for this order — check EasyPost (account funding / carrier setup) and create the label manually.')}`}
     ${data.shipUrl ? `${p('When you\'ve handed the box to the carrier, mark it shipped — this emails the customer their tracking number:')}${btn(data.shipUrl, 'Mark Shipped &amp; Notify Customer')}` : ''}
   `);
 }
@@ -145,10 +181,10 @@ export interface ShippedEmailData {
 
 export function orderShippedHtml(data: ShippedEmailData): string {
   return layout(`
-    ${h1(`Your order is on its way${data.customerName ? `, ${data.customerName.split(' ')[0]}` : ''}.`)}
+    ${h1(`Your order is on its way${data.customerName ? `, ${firstName(data.customerName)}` : ''}.`)}
     ${p('Your preserved roses have been dispatched. Here are your tracking details:')}
     ${divider()}
-    ${p(`<strong>${data.carrier || 'Carrier'}:</strong> ${data.trackingCode || '—'}`)}
+    ${p(`<strong>${escapeHtml(data.carrier || 'Carrier')}:</strong> ${escapeHtml(data.trackingCode || '—')}`)}
     ${data.trackingUrl ? btn(data.trackingUrl, 'Track Your Order') : ''}
     ${divider()}
     ${p('Questions? Reply to this email or reach us at <a href="mailto:hello@lesfleursdesign.com" style="color:#8A6F47;">hello@lesfleursdesign.com</a>')}
@@ -166,7 +202,7 @@ export interface WholesaleEmailData {
 export function wholesaleConfirmationHtml(data: WholesaleEmailData): string {
   return layout(`
     ${h1('We received your inquiry.')}
-    ${p(`Thank you${data.name ? `, ${data.name.split(' ')[0]}` : ''}. We review every partner request personally and will get back to you within 1–2 business days.`)}
+    ${p(`Thank you${data.name ? `, ${firstName(data.name)}` : ''}. We review every partner request personally and will get back to you within 1–2 business days.`)}
     ${divider()}
     ${p('Want to connect sooner? Book a 30-minute call directly:')}
     ${btn(data.calLink, 'Schedule a Call')}
@@ -187,10 +223,10 @@ export interface WholesaleAdminData {
 export function wholesaleAdminHtml(data: WholesaleAdminData): string {
   return layout(`
     ${h1('New wholesale inquiry.')}
-    ${p(`<strong>Name:</strong> ${data.name}`)}
-    ${p(`<strong>Email:</strong> ${data.email}`)}
-    ${data.company ? p(`<strong>Company:</strong> ${data.company}`) : ''}
-    ${data.message ? `${divider()}${p(`<strong>Message:</strong><br>${data.message.replace(/\n/g, '<br>')}`)}` : ''}
+    ${p(`<strong>Name:</strong> ${escapeHtml(data.name)}`)}
+    ${p(`<strong>Email:</strong> ${escapeHtml(data.email)}`)}
+    ${data.company ? p(`<strong>Company:</strong> ${escapeHtml(data.company)}`) : ''}
+    ${data.message ? `${divider()}${p(`<strong>Message:</strong><br>${escapeHtml(data.message).replace(/\n/g, '<br>')}`)}` : ''}
   `);
 }
 
@@ -210,15 +246,15 @@ export interface InteriorsInquiryData {
 export function interiorsInquiryAdminHtml(data: InteriorsInquiryData): string {
   return layout(`
     ${h1('New Interiors inquiry.')}
-    ${p(`<strong>Name:</strong> ${data.name}${data.role ? ` · ${data.role}` : ''}`)}
-    ${p(`<strong>Business / Firm:</strong> ${data.business || '—'}`)}
-    ${p(`<strong>Email:</strong> ${data.email}`)}
-    ${data.phone ? p(`<strong>Phone:</strong> ${data.phone}`) : ''}
+    ${p(`<strong>Name:</strong> ${escapeHtml(data.name)}${data.role ? ` · ${escapeHtml(data.role)}` : ''}`)}
+    ${p(`<strong>Business / Firm:</strong> ${escapeHtml(data.business || '—')}`)}
+    ${p(`<strong>Email:</strong> ${escapeHtml(data.email)}`)}
+    ${data.phone ? p(`<strong>Phone:</strong> ${escapeHtml(data.phone)}`) : ''}
     ${divider()}
-    ${p(`<strong>Type of space:</strong> ${data.spaceType || '—'}`)}
-    ${data.budget ? p(`<strong>Budget / volume:</strong> ${data.budget}`) : ''}
+    ${p(`<strong>Type of space:</strong> ${escapeHtml(data.spaceType || '—')}`)}
+    ${data.budget ? p(`<strong>Budget / volume:</strong> ${escapeHtml(data.budget)}`) : ''}
     ${divider()}
-    ${p(`<strong>Project:</strong><br>${data.description.replace(/\n/g, '<br>')}`)}
+    ${p(`<strong>Project:</strong><br>${escapeHtml(data.description).replace(/\n/g, '<br>')}`)}
   `);
 }
 
@@ -233,20 +269,35 @@ export interface ContactEmailData {
 
 export function contactAdminHtml(data: ContactEmailData): string {
   return layout(`
-    ${h1(`New message: ${data.subject}`)}
-    ${p(`<strong>From:</strong> ${data.name} (${data.email})`)}
+    ${h1(`New message: ${escapeHtml(data.subject)}`)}
+    ${p(`<strong>From:</strong> ${escapeHtml(data.name)} (${escapeHtml(data.email)})`)}
     ${divider()}
-    ${p(data.message.replace(/\n/g, '<br>'))}
+    ${p(escapeHtml(data.message).replace(/\n/g, '<br>'))}
   `);
 }
 
-// ── Newsletter welcome (to subscriber) ────────────────────────────────────────
+// ── Newsletter welcome (to subscriber) — MARKETING email ──────────────────────
 
-export function newsletterWelcomeHtml(): string {
-  return layout(`
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lesfleursdesign.com';
+
+// Build the HMAC-signed one-click unsubscribe URL for a subscriber. Returns
+// undefined when the signing secret is unavailable, in which case the welcome
+// email still renders the required postal address (per CAN-SPAM) but omits the
+// unsubscribe link rather than emitting a link that can't be honored.
+function unsubscribeUrlFor(email: string): string | undefined {
+  const token = signNewsletterEmail(email);
+  if (!token) return undefined;
+  return `${SITE_URL}/api/newsletter/unsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
+}
+
+export function newsletterWelcomeHtml(email: string): string {
+  return layout(
+    `
     ${h1('You\'re on the list.')}
     ${p('Be the first to discover new arrangements, seasonal collections, and private previews — before anyone else.')}
     ${divider()}
-    ${btn('https://lesfleursdesign.com/shop', 'Browse the Collection')}
-  `);
+    ${btn(`${SITE_URL}/shop`, 'Browse the Collection')}
+  `,
+    { unsubscribeUrl: unsubscribeUrlFor(email) },
+  );
 }

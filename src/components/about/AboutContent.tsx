@@ -4,30 +4,27 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-const GENERATIONS = [
+// Four steps of the craft — factual, product-focused. No biography asserted.
+const CRAFT_STEPS = [
   {
     numeral: 'I',
-    year: '1924',
-    name: 'Giuseppe\ndi Rosa',
-    body: 'Opens the family glasshouse in Italy — field-grown roses for parish weddings and the regional opera house.',
+    label: 'The Bloom',
+    body: 'Roses selected at peak bloom — the moment colour and form are fullest — before a single petal turns.',
   },
   {
     numeral: 'II',
-    year: '1958',
-    name: 'Antonio\ndi Rosa',
-    body: 'Expands the atelier into ceremonial work — baptisms, funerals, and the great post-war villa commissions.',
+    label: 'Preservation',
+    body: 'A preservation process replaces the natural sap with food-grade glycerin, holding the bloom soft, supple, and vivid.',
   },
   {
     numeral: 'III',
-    year: '1989',
-    name: 'Lorenzo\ndi Rosa',
-    body: 'Introduces architectural floristry — pressed walls, sculpted arches, and the first floral letterforms.',
+    label: 'The Vessel',
+    body: 'Glazed ceramic vessels chosen to frame each arrangement — quiet palettes, considered proportions, made to be lived with.',
   },
   {
     numeral: 'IV',
-    year: '2023',
-    name: 'Matteo\ndi Rosa',
-    body: 'Founds Les Fleurs Design in Miami. Carries preserved roses and handcrafted vessels into a new chapter abroad.',
+    label: 'The Arrangement',
+    body: 'Each piece composed by hand and built to last on a console, a desk, or a front desk — without water or sunlight.',
   },
 ];
 
@@ -77,7 +74,7 @@ export function AboutContent() {
             fill
             sizes="100vw"
             className="object-cover object-center"
-            priority
+            preload
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-[#F9F6F2]" />
         </div>
@@ -90,7 +87,7 @@ export function AboutContent() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="font-body text-[10px] tracking-[0.3em] uppercase text-white/55 mb-8"
+            className="font-body text-[10px] tracking-[0.3em] uppercase text-white/85 mb-8 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]"
           >
             Maison Florale &nbsp;·&nbsp; Miami, Florida
           </motion.p>
@@ -113,7 +110,7 @@ export function AboutContent() {
             className="flex items-center gap-4 mb-14"
           >
             <div className="h-px w-12 bg-white/30" />
-            <p className="font-body text-[10px] tracking-[0.25em] uppercase text-white/45">
+            <p className="font-body text-[10px] tracking-[0.25em] uppercase text-white/85 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]">
               Portfolio &nbsp;·&nbsp; Volume I
             </p>
             <div className="h-px w-12 bg-white/30" />
@@ -124,7 +121,7 @@ export function AboutContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="font-display text-sm italic text-white/40 mb-0"
+            className="font-display text-sm italic text-white/80 mb-0 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]"
           >
             — Est. 2023 &nbsp;·&nbsp; Miami, Florida —
           </motion.p>
@@ -144,7 +141,7 @@ export function AboutContent() {
             <p className="font-display text-[clamp(1.5rem,4vw,3rem)] font-light italic text-[#1C1C1A] leading-tight mb-4">
               quiet luxury, in full bloom
             </p>
-            <p className="font-body text-sm md:text-base leading-[1.9] text-[#1C1C1A]/50 max-w-lg mx-auto">
+            <p className="font-body text-sm md:text-base leading-[1.9] text-[#1C1C1A]/70 max-w-lg mx-auto">
               Roses preserved at peak bloom, presented in handcrafted ceramic vessels. For gifts,
               lobbies, and the spaces that demand distinction.
             </p>
@@ -165,13 +162,13 @@ export function AboutContent() {
           viewport={{ once: true }}
           className="text-center mb-20 md:mb-28"
         >
-          <p className="font-display text-sm italic text-[#1C1C1A]/30 mb-6">
+          <p className="font-display text-sm italic text-[#1C1C1A]/55 mb-6">
             — a still life that lasts —
           </p>
 
           <Rule className="mb-8 max-w-xs mx-auto" />
 
-          <p className="font-body text-[9px] tracking-[0.28em] uppercase text-[#1C1C1A]/30 mb-6">
+          <p className="font-body text-[9px] tracking-[0.28em] uppercase text-[#1C1C1A]/60 mb-6">
             Chapter I &nbsp;—&nbsp; The Story
           </p>
           <h2 className="font-display text-[clamp(2.5rem,6vw,5.5rem)] font-light text-[#1C1C1A] leading-[1.02] mb-4">
@@ -199,38 +196,34 @@ export function AboutContent() {
             className="space-y-8"
           >
             <p className="story-lede font-display text-xl md:text-2xl leading-[1.65] text-[#1C1C1A]/85">
-              My name is Matteo di Rosa, and I come from a family in Italy that has worked with
-              flowers for four generations.
+              Les Fleurs Design begins with a simple idea: the most beautiful flowers should not
+              have to be the most fleeting.
             </p>
 
             <p className="font-body text-base md:text-[17px] leading-[1.95] text-[#1C1C1A]/60">
-              I was raised between the cutting rooms and the cold storage of my family&rsquo;s
-              atelier — in a small corner of Italy where the mornings smelled of wet leaves and
-              rose stems, and where my grandfather taught me that a single bloom, handled
-              correctly, could carry an entire room. My father arranged the villas. My mother
-              arranged the churches. The work was quiet, exact, and never temporary in spirit,
-              even when the flowers themselves were.
+              Founded in Miami in 2023, the studio makes preserved rose arrangements presented in
+              glazed ceramic vessels — objects designed for the rooms that are judged the moment
+              you walk in. The work is quiet and exact: real roses, held at peak bloom, framed by
+              ceramics chosen for their proportion and palette rather than their noise.
             </p>
 
             <p className="font-body text-base md:text-[17px] leading-[1.95] text-[#1C1C1A]/60">
-              Les Fleurs Design is the form that inheritance takes here. I founded the studio to
-              bring our family&rsquo;s craft — the patience, the obsession with material, the
-              refusal to accept that beauty must be brief — into a new language. Real roses. Real
-              ceramic. Real permanence.
+              What we make is the opposite of a cut bouquet. Roses are preserved at the height of
+              their colour through a process that replaces their natural sap with food-grade
+              glycerin — leaving them soft to the touch, vivid, and stable for around a year
+              without water or sunlight. The flowers are still real. They have simply been given
+              more time.
             </p>
 
             <p className="font-body text-base md:text-[17px] leading-[1.95] text-[#1C1C1A]/60">
-              What we make today is the opposite of a cut bouquet. Roses preserved at peak bloom.
-              Vessels hand-formed by independent artisans. Objects engineered to last a year on a
-              console table, a hotel front desk, a dining room, a private suite. The flowers are
-              still real — they have simply been given more time.
+              Each arrangement is composed by hand, in small numbers, and built to live on a
+              console table, a desk, a dining room, or a hotel front desk. The discipline is the
+              same throughout — patience with the material, an obsession with how a single bloom
+              carries a room, and a refusal to accept that beauty must be brief.
             </p>
 
-            <p className="font-body text-base md:text-[17px] leading-[1.95] text-[#1C1C1A]/60">
-              I am carrying my family&rsquo;s heritage across an ocean. The atelier here is small,
-              but the conversation is the same one we&rsquo;ve been having for a hundred years:
-              how does one make beauty worth keeping?
-            </p>
+            {/* TODO: owner to supply real founder voice / first-person story.
+                Until confirmed, keep the brand-level (not biographical) copy above. */}
 
             {/* Signature block */}
             <div className="pt-8 border-t border-[#A06855]/15">
@@ -238,10 +231,11 @@ export function AboutContent() {
                 className="text-4xl md:text-5xl text-[#A06855] mb-2"
                 style={{ fontFamily: 'var(--font-italianno), cursive' }}
               >
-                Matteo di Rosa
+                Les Fleurs Design
               </p>
-              <p className="font-body text-xs tracking-[0.16em] uppercase text-[#1C1C1A]/30">
-                Founder &amp; Designer
+              {/* TODO: owner to supply real founder name + title to sign this section. */}
+              <p className="font-body text-xs tracking-[0.16em] uppercase text-[#1C1C1A]/60">
+                Miami, Florida
               </p>
             </div>
           </motion.div>
@@ -254,17 +248,21 @@ export function AboutContent() {
             viewport={{ once: true, margin: '-60px' }}
             className="lg:sticky lg:top-28"
           >
+            {/* TODO: owner to confirm whether '/matteo port.png' depicts the real founder.
+                Do NOT label this image with a specific named founder unless confirmed.
+                If it is not the founder, replace with an atelier / product image. */}
             <div className="relative w-full overflow-hidden" style={{ aspectRatio: '3/4' }}>
               <Image
                 src="/matteo port.png"
-                alt="Matteo di Rosa, Founder of Les Fleurs Design"
+                alt="Les Fleurs Design portrait"
                 fill
                 sizes="(max-width: 1024px) 100vw, 420px"
                 className="object-cover object-top"
               />
             </div>
-            <p className="mt-4 font-body text-[10px] tracking-[0.18em] uppercase text-[#1C1C1A]/30 text-center">
-              Matteo di Rosa &nbsp;·&nbsp; Founder &amp; Designer
+            <p className="mt-4 font-body text-[10px] tracking-[0.18em] uppercase text-[#1C1C1A]/60 text-center">
+              {/* TODO: owner to supply real founder name + title for this caption. */}
+              Les Fleurs Design &nbsp;·&nbsp; Miami, Florida
             </p>
           </motion.div>
 
@@ -286,25 +284,25 @@ export function AboutContent() {
                 the room.&rdquo;
               </p>
             </blockquote>
-            <p className="font-body text-[10px] tracking-[0.22em] uppercase text-[#A06855]/60 mb-1">
-              — a family saying
+            <p className="font-body text-[10px] tracking-[0.22em] uppercase text-[#8a5440] mb-1">
+              — Les Fleurs Design
             </p>
-            <p className="font-body text-[10px] tracking-[0.22em] uppercase text-[#1C1C1A]/25">
-              passed down four generations
+            <p className="font-body text-[10px] tracking-[0.22em] uppercase text-[#1C1C1A]/55">
+              quiet luxury, in full bloom
             </p>
           </div>
           <Rule className="mt-12 mb-16" />
 
           {/* Closing prose */}
-          <p className="font-body text-sm md:text-base leading-[2] text-[#1C1C1A]/50 max-w-[600px] mx-auto text-center">
-            Every piece that leaves the studio begins in this conversation — between the growers
-            our family has known for decades, the artisans who throw our ceramics by hand, and
-            the room in front of us asking to feel a little more alive.
+          <p className="font-body text-sm md:text-base leading-[2] text-[#1C1C1A]/70 max-w-[600px] mx-auto text-center">
+            Every piece that leaves the studio begins in the same conversation — between the
+            roses, the artisan ceramics that hold them, and the room in front of us asking to
+            feel a little more alive.
           </p>
 
           {/* Final statement */}
           <p
-            className="mt-12 text-center font-display text-[clamp(1.3rem,3vw,2.25rem)] font-light italic text-[#1C1C1A]/55"
+            className="mt-12 text-center font-display text-[clamp(1.3rem,3vw,2.25rem)] font-light italic text-[#1C1C1A]/70"
           >
             Crafted for permanence. Designed for distinction.
           </p>
@@ -312,7 +310,7 @@ export function AboutContent() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════
-          CHAPTER II — The Lineage
+          CHAPTER II — The Craft
       ══════════════════════════════════════════════════════════ */}
       <section className="bg-[#1C1C1A] text-[#F9F6F2] py-28 md:py-40 overflow-hidden">
         <div className="mx-auto max-w-[1100px] px-6 md:px-10 lg:px-8">
@@ -325,17 +323,17 @@ export function AboutContent() {
             viewport={{ once: true }}
             className="text-center mb-20 md:mb-28"
           >
-            <p className="font-body text-[9px] tracking-[0.28em] uppercase text-[#F9F6F2]/25 mb-5">
-              Chapter II &nbsp;—&nbsp; The Lineage
+            <p className="font-body text-[9px] tracking-[0.28em] uppercase text-[#F9F6F2]/60 mb-5">
+              Chapter II &nbsp;—&nbsp; The Craft
             </p>
             <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] font-light leading-[1.02] mb-4">
-              Four generations, one craft
+              Four steps, one obsession
             </h2>
             <p
               className="text-4xl md:text-5xl text-[#A06855]"
               style={{ fontFamily: 'var(--font-italianno), cursive' }}
             >
-              la nostra eredità
+              made to last
             </p>
           </motion.div>
 
@@ -346,9 +344,9 @@ export function AboutContent() {
             <div className="hidden lg:block absolute top-[2.75rem] left-0 right-0 h-px bg-[#F9F6F2]/8" />
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-14 lg:gap-8">
-              {GENERATIONS.map((gen, i) => (
+              {CRAFT_STEPS.map((step, i) => (
                 <motion.div
-                  key={gen.numeral}
+                  key={step.numeral}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
@@ -361,25 +359,20 @@ export function AboutContent() {
                     {/* Dot on line */}
                     <div className="hidden lg:block absolute -top-[2.75rem] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#A06855] mt-[2.4rem]" />
                     <span className="font-display text-[4.5rem] md:text-[5.5rem] font-light leading-none text-[#F9F6F2]/6 select-none">
-                      {gen.numeral}
+                      {step.numeral}
                     </span>
                   </div>
 
-                  {/* Year */}
-                  <p className="font-body text-[10px] tracking-[0.25em] uppercase text-[#A06855]/70 mb-4">
-                    — {gen.year} —
-                  </p>
-
-                  {/* Name */}
-                  <p className="font-display text-xl md:text-2xl font-light text-[#F9F6F2] leading-tight mb-5 whitespace-pre-line">
-                    {gen.name}
+                  {/* Step label */}
+                  <p className="font-body text-[10px] tracking-[0.25em] uppercase text-[#c98a72] mb-4">
+                    — {step.label} —
                   </p>
 
                   <div className="w-8 h-px bg-[#A06855]/40 mb-5" />
 
                   {/* Body */}
-                  <p className="font-body text-sm leading-[1.85] text-[#F9F6F2]/45">
-                    {gen.body}
+                  <p className="font-body text-sm leading-[1.85] text-[#F9F6F2]/75">
+                    {step.body}
                   </p>
                 </motion.div>
               ))}
@@ -410,10 +403,10 @@ export function AboutContent() {
           ].map((item) => (
             <div key={item.href} className="border-t border-[#1C1C1A]/10 pt-8">
               <h3 className="font-display text-2xl font-light text-[#1C1C1A] mb-3">{item.title}</h3>
-              <p className="font-body text-sm text-[#1C1C1A]/45 leading-[1.85] mb-6">{item.body}</p>
+              <p className="font-body text-sm text-[#1C1C1A]/70 leading-[1.85] mb-6">{item.body}</p>
               <Link
                 href={item.href}
-                className="label-caps text-[#1C1C1A]/40 hover:text-[#1C1C1A] transition-colors duration-300"
+                className="label-caps text-[#1C1C1A]/70 hover:text-[#1C1C1A] transition-colors duration-300"
               >
                 {item.cta}
               </Link>

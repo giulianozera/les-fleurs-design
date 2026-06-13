@@ -18,7 +18,6 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   const { session_id } = await searchParams;
 
   let customerName: string | null = null;
-  let customerEmail: string | null = null;
 
   if (session_id) {
     try {
@@ -28,7 +27,9 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           expand: ['line_items'],
         });
         customerName = session.customer_details?.name ?? null;
-        customerEmail = session.customer_details?.email ?? null;
+        // Note: we intentionally do NOT read or render the buyer's email here.
+        // The session_id sits in a shareable URL, so echoing the email would
+        // leak PII to anyone who sees the link. Stripe emails the receipt.
       }
     } catch {
       // Session lookup is best-effort; page still renders without it
@@ -46,9 +47,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
         </h1>
 
         <p className="font-body text-sm text-warm-gray leading-[1.8] mb-8">
-          {customerEmail
-            ? `Your order is confirmed. A receipt has been sent to ${customerEmail}.`
-            : 'Your order is confirmed and a receipt has been sent to your email.'}
+          Your order is confirmed and a receipt has been sent to your email.
           <br />
           Your roses will be prepared with care and shipped within 2–3 business days.
         </p>

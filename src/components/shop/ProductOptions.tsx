@@ -6,7 +6,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/sanity/types';
 import { useCartStore } from '@/store/cartStore';
-import type { ShippingRate } from '@/lib/shipping';
+import type { ShippingRate } from '@/lib/shippingConfig';
+import { Prop65Warning } from '@/components/ui/Prop65Warning';
 
 interface ProductOptionsProps {
   product: Product;
@@ -97,7 +98,7 @@ export function ProductOptions({ product, initialColorSlug }: ProductOptionsProp
     <div className="flex flex-col gap-7 pt-[72px] lg:pt-12">
       {/* Breadcrumb */}
       {product.collection && (
-        <p className="label-caps text-warm-gray">{product.collection.title}</p>
+        <p className="label-caps text-charcoal/70">{product.collection.title}</p>
       )}
 
       {/* Title + Price */}
@@ -252,11 +253,30 @@ export function ProductOptions({ product, initialColorSlug }: ProductOptionsProp
         </button>
       </div>
 
+      {/* Final sale notice (Task 3) — muted but legible */}
+      <p className="font-body text-xs text-warm-gray leading-relaxed">
+        Final sale — all sales are final.{' '}
+        <Link
+          href="/shipping"
+          className="underline underline-offset-2 text-charcoal hover:text-stone transition-colors duration-200"
+        >
+          See Shipping &amp; Returns
+        </Link>
+        .
+      </p>
+
+      {/* California Proposition 65 warning (Task 9) — applies to all products (glazed ceramic vessel).
+          TODO: confirm with supplier whether glazes are lead/cadmium-free — if certified safe this warning may be removed. */}
+      <Prop65Warning />
+
       {/* Shipping estimator */}
       <div className="border border-charcoal/10 p-4">
-        <p className="label-caps text-warm-gray mb-3">Estimate Shipping</p>
+        <label htmlFor="zip-estimate" className="label-caps text-charcoal mb-3 block">
+          Estimate Shipping
+        </label>
         <div className="flex items-center gap-3">
           <input
+            id="zip-estimate"
             type="text"
             value={zip}
             onChange={(e) => {
@@ -268,13 +288,14 @@ export function ProductOptions({ product, initialColorSlug }: ProductOptionsProp
             placeholder="Enter ZIP code"
             maxLength={5}
             inputMode="numeric"
-            className="flex-1 bg-transparent border-b border-charcoal/20 py-1.5 font-body text-sm text-charcoal placeholder:text-warm-gray outline-none focus:border-charcoal transition-colors duration-200"
-            aria-label="ZIP code for shipping estimate"
+            className="flex-1 bg-transparent border-b border-charcoal/20 py-1.5 font-body text-sm text-charcoal placeholder:text-charcoal/50 outline-none focus:border-charcoal transition-colors duration-200"
           />
           <button
             onClick={handleEstimateShipping}
             disabled={zip.length !== 5 || zipLoading}
-            className="label-caps text-charcoal/50 hover:text-charcoal transition-colors duration-200 flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label="Estimate shipping"
+            aria-busy={zipLoading}
+            className="label-caps text-charcoal hover:text-stone transition-colors duration-200 flex-shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {zipLoading ? '…' : 'Check'}
           </button>
@@ -290,7 +311,7 @@ export function ProductOptions({ product, initialColorSlug }: ProductOptionsProp
               <div key={rate.id} className="flex items-center justify-between">
                 <div>
                   <span className="font-body text-xs text-charcoal">{rate.displayName}</span>
-                  <span className="font-body text-xs text-warm-gray ml-2">{rate.deliveryDays}</span>
+                  <span className="font-body text-xs text-charcoal/70 ml-2">{rate.deliveryDays}</span>
                 </div>
                 <span className="font-body text-xs text-charcoal">
                   {rate.price === 0 ? 'Free' : `$${rate.price}`}

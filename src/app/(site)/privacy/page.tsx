@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { legalName, formatMailingAddress, supportEmail } from '@/lib/site-config';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy — Les Fleurs Design',
@@ -15,7 +16,12 @@ export default function PrivacyPage() {
           <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-light text-charcoal leading-tight mb-4">
             Privacy Policy.
           </h1>
-          <p className="font-body text-xs text-warm-gray mb-16">Last updated: {LAST_UPDATED}</p>
+          <p className="font-body text-xs text-warm-gray mb-8">Last updated: {LAST_UPDATED}</p>
+
+          <div className="mb-16 font-body text-sm text-charcoal/80 leading-[1.9]">
+            <p className="text-charcoal font-medium">{legalName}</p>
+            <p className="text-charcoal/80">{formatMailingAddress()}</p>
+          </div>
 
           <div className="flex flex-col gap-12 font-body text-sm text-warm-gray leading-[1.9]">
 
@@ -28,9 +34,10 @@ export default function PrivacyPage() {
               <ul className="flex flex-col gap-2 pl-4">
                 {[
                   'Name and email address (orders, newsletter, contact forms)',
+                  'Phone number (collected at checkout and on business/interiors inquiry forms, used for order/delivery coordination only — not SMS marketing)',
                   'Shipping address (orders)',
                   'Payment information — processed directly by Stripe; we do not store card details',
-                  'Company name and inquiry details (wholesale forms)',
+                  'Company name and inquiry details (wholesale, business, and interiors forms)',
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <span className="mt-2 w-1 h-1 rounded-full bg-gold flex-shrink-0" />
@@ -38,6 +45,7 @@ export default function PrivacyPage() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-5">To fulfill orders, we share your shipping name and address with our shipping/label provider (EasyPost) and the delivery carrier; see Section 4 for details.</p>
               <p className="mt-5"><strong className="text-charcoal font-medium">Information collected automatically:</strong> Standard web server logs including IP address, browser type, pages visited, and referring URLs. We do not use tracking pixels or behavioral advertising cookies.</p>
             </Section>
 
@@ -64,6 +72,7 @@ export default function PrivacyPage() {
               <div className="flex flex-col divide-y divide-charcoal/10">
                 {[
                   { name: 'Stripe', purpose: 'Payment processing', link: 'stripe.com/privacy' },
+                  { name: 'EasyPost', purpose: 'Shipping label generation & tracking', link: 'easypost.com/privacy-policy' },
                   { name: 'Supabase', purpose: 'Order and subscriber database', link: 'supabase.com/privacy' },
                   { name: 'Resend', purpose: 'Transactional email delivery', link: 'resend.com/legal/privacy-policy' },
                   { name: 'Sanity', purpose: 'Content management', link: 'sanity.io/legal/privacy' },
@@ -80,10 +89,12 @@ export default function PrivacyPage() {
                   </div>
                 ))}
               </div>
+              <p className="mt-5">To ship your order, we share your shipping name and address with our shipping/label provider (EasyPost) and the delivery carrier so they can generate a shipping label and deliver your package. We do not share this information for any other purpose.</p>
             </Section>
 
             <Section title="5. Data Retention">
-              <p>Order data is retained for 7 years as required by US tax law. Newsletter subscriber data is retained until you unsubscribe. You may request deletion of your data at any time by emailing us.</p>
+              {/* TODO: confirm retention periods (order/tax 7yr, inquiry/contact 24mo) with counsel before launch. */}
+              <p>Order data is retained for 7 years as required by US tax law. Inquiry and contact-form messages (including business and interiors inquiries) are retained for up to 24 months unless deletion is requested sooner. Newsletter subscriber data is retained until you unsubscribe. You may request deletion of your data at any time by emailing us.</p>
             </Section>
 
             <Section title="6. Your Rights">
@@ -105,15 +116,60 @@ export default function PrivacyPage() {
               <p className="mt-5">To exercise any of these rights, contact <a href="mailto:hello@lesfleursdesign.com" className="text-charcoal underline underline-offset-4">hello@lesfleursdesign.com</a>.</p>
             </Section>
 
-            <Section title="7. Cookies">
-              <p>We use only essential session cookies required for cart functionality. We do not use advertising or analytics cookies. No cookie consent banner is displayed because we collect no tracking data.</p>
+            <Section title="7. Cookies & Browser Storage">
+              {/*
+                COMPLIANCE PASS (verified) — cookie statement VERIFIED ACCURATE in substance,
+                and the two descriptive imprecisions flagged by the audit are now CORRECTED in
+                the copy below. The substantive claim is TRUE per a full src audit: NO analytics
+                or advertising cookies/SDKs anywhere (no @vercel/analytics, GA/gtag, Meta Pixel,
+                Plausible, PostHog, Mixpanel, Hotjar, Clarity, Segment), NO consent banner, and the
+                cart's first-party storage is "strictly necessary" and consent-exempt under
+                ePrivacy/GDPR, so the no-banner conclusion holds.
+                Corrections applied: (1) the cart is browser localStorage (zustand persist), not a
+                "cookie"; (2) it is persistent, not "session"-scoped. The Stripe checkout-redirect
+                cookies (set on Stripe's domain) are now disclosed for completeness. Sanity Studio
+                auth storage applies only to logged-in CMS editors at /studio, not to shoppers.
+              */}
+              <p>We use only essential, first-party browser storage (localStorage) to remember the contents of your shopping cart. This is strictly necessary for the Site to function and is not used to track you. We do not use advertising or analytics cookies, and no cookie consent banner is displayed because we collect no tracking data. When you check out, our payment processor (Stripe) may set its own cookies on its hosted checkout page to process your payment securely.</p>
             </Section>
 
             <Section title="8. Children's Privacy">
               <p>Our Site is not directed to individuals under 13 years of age. We do not knowingly collect personal data from children.</p>
             </Section>
 
-            <Section title="9. Changes to This Policy">
+            <Section title="9. California Privacy Rights">
+              <p className="mb-3">If you are a California resident, the California Consumer Privacy Act (CCPA/CPRA) gives you certain rights regarding your personal information.</p>
+              <p className="mb-3"><strong className="text-charcoal font-medium">We do not sell or share your personal information.</strong> We do not sell your personal information, and we do not share it for cross-context behavioral advertising. We use no advertising or analytics cookies.</p>
+              <p className="mb-3"><strong className="text-charcoal font-medium">Categories of personal information we collect</strong> and the business purposes for each:</p>
+              <ul className="flex flex-col gap-2 pl-4">
+                {[
+                  'Identifiers (name, email, phone number, shipping address) — to process orders, coordinate delivery, and respond to inquiries',
+                  'Commercial / transaction information (products purchased, order history) — to fulfill and record your orders',
+                  'Internet / electronic network activity (server logs such as IP address, browser type, pages visited) — to maintain the security and integrity of the Site',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="mt-2 w-1 h-1 rounded-full bg-gold flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 mb-3">Subject to applicable exceptions, California residents have the right to:</p>
+              <ul className="flex flex-col gap-2 pl-4">
+                {[
+                  'Know what personal information we collect and how we use it',
+                  'Request deletion of personal information we hold about you',
+                  'Request correction of inaccurate personal information',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="mt-2 w-1 h-1 rounded-full bg-gold flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5">We will not discriminate or retaliate against you for exercising any of these rights. To submit a request, email <a href={`mailto:${supportEmail}`} className="text-charcoal underline underline-offset-4">{supportEmail}</a>. We may need to verify your identity before fulfilling your request.</p>
+            </Section>
+
+            <Section title="10. Changes to This Policy">
               <p>We may update this Privacy Policy periodically. Material changes will be communicated via email to active customers or by a prominent notice on the Site.</p>
             </Section>
 

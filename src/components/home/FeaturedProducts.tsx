@@ -62,17 +62,17 @@ function ProductCard({ product }: { product: Product }) {
     >
       {/* Image container — 4:5 portrait */}
       <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
-        <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
+        <p className="label-caps text-charcoal/55 tracking-widest">Coming Soon</p>
       </div>
 
       {/* Product info */}
       <div className="mt-3 px-0.5">
-        <p className="label-caps text-charcoal/40 mb-1">{product.collection}</p>
+        <p className="label-caps text-charcoal/60 mb-1">{product.collection}</p>
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-display text-lg font-light text-charcoal group-hover:text-stone transition-colors duration-300 leading-snug">
             {product.name}
           </h3>
-          <p className="label-caps text-charcoal/70 flex-shrink-0 mt-1">
+          <p className="label-caps text-charcoal/80 flex-shrink-0 mt-1">
             ${product.price.toLocaleString()}
           </p>
         </div>
@@ -107,7 +107,7 @@ export function FeaturedProducts() {
         variants={stagger}
       >
         <div>
-          <motion.p className="label-caps text-charcoal/40 mb-3" variants={fadeUp}>
+          <motion.p className="label-caps text-charcoal/60 mb-3" variants={fadeUp}>
             Featured
           </motion.p>
           <motion.h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-light text-charcoal" variants={fadeUp}>
@@ -117,10 +117,10 @@ export function FeaturedProducts() {
         <motion.div variants={fadeUp} className="hidden md:block">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 label-caps text-charcoal/60 hover:text-charcoal transition-colors duration-300 group"
+            className="inline-flex items-center gap-2 label-caps text-charcoal/75 hover:text-charcoal transition-colors duration-300 group"
           >
             View All Products
-            <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </motion.div>
@@ -144,10 +144,10 @@ export function FeaturedProducts() {
       <div className="mt-10 md:hidden text-center">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 label-caps text-charcoal/60 hover:text-charcoal transition-colors duration-300"
+          className="inline-flex items-center gap-2 label-caps text-charcoal/75 hover:text-charcoal transition-colors duration-300"
         >
           View All Products
-          <ArrowRight size={12} />
+          <ArrowRight size={12} aria-hidden="true" />
         </Link>
       </div>
     </section>

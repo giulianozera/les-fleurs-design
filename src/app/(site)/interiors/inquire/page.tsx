@@ -20,19 +20,19 @@ export default async function InquirePage({ searchParams }: Props) {
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-20 md:py-28">
           <Link
             href="/interiors"
-            className="label-caps text-charcoal/40 hover:text-charcoal transition-colors duration-300"
+            className="label-caps text-charcoal/70 hover:text-charcoal transition-colors duration-300"
           >
-            ← Interiors
+            <span aria-hidden="true">←</span> Interiors
           </Link>
 
           <div className="mt-8 lg:grid lg:grid-cols-2 lg:gap-20 lg:items-start">
             {/* Left — form */}
             <div>
-              <p className="label-caps text-warm-gray mb-4">Start a Project</p>
+              <p className="label-caps text-charcoal/70 mb-4">Start a Project</p>
               <h1 className="font-display text-[clamp(2.25rem,4vw,3.25rem)] font-light text-charcoal mb-6 leading-tight">
                 Tell us about the space.
               </h1>
-              <p className="font-body text-sm text-warm-gray leading-[1.9] mb-10 max-w-[44ch]">
+              <p className="font-body text-sm text-charcoal/75 leading-[1.9] mb-10 max-w-[44ch]">
                 Hotels, restaurants, offices, retail, or a private residence — share the project and we’ll
                 reply within 1–2 business days.
               </p>
@@ -41,7 +41,7 @@ export default async function InquirePage({ searchParams }: Props) {
 
             {/* Right — book a consultation */}
             <div id="book" className="mt-16 lg:mt-0 scroll-mt-[88px]">
-              <p className="label-caps text-warm-gray mb-4">Or Book a Consultation</p>
+              <p className="label-caps text-charcoal/70 mb-4">Or Book a Consultation</p>
               <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-light text-charcoal mb-10 leading-tight">
                 Speak with us directly.
               </h2>

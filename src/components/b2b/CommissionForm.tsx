@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { HoneypotField } from '@/components/ui/HoneypotField';
 
 export type CommissionVariant = 'business' | 'interiors';
 
@@ -25,6 +26,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
     budget: BUDGET_RANGES[1],
     timeline: TIMELINES[1],
     notes: '',
+    company_website: '', // honeypot
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -63,7 +65,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
         <h3 className="font-display text-3xl font-light text-charcoal mb-3">
           Commission received.
         </h3>
-        <p className="font-body text-sm text-warm-gray leading-[1.9]">
+        <p className="font-body text-sm text-charcoal/70 leading-[1.9]">
           We review every commission request personally. You&rsquo;ll hear from us within 2–3 business days.
         </p>
       </div>
@@ -79,7 +81,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
           { id: 'email', label: 'Email Address', required: true, type: 'email' },
         ].map(({ id, label, required, type }) => (
           <div key={id} className="flex flex-col gap-2">
-            <label htmlFor={`commission-${id}`} className="label-caps text-charcoal/60 text-[10px]">
+            <label htmlFor={`commission-${id}`} className="label-caps text-charcoal/75 text-[10px]">
               {label}{required && <span className="text-gold ml-1">*</span>}
             </label>
             <input
@@ -96,7 +98,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
 
       {/* Org name */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="commission-orgName" className="label-caps text-charcoal/60 text-[10px]">
+        <label htmlFor="commission-orgName" className="label-caps text-charcoal/75 text-[10px]">
           {isInteriors ? 'Firm Name' : 'Business Name'}
         </label>
         <input
@@ -110,7 +112,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
 
       {/* Category */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="commission-category" className="label-caps text-charcoal/60 text-[10px]">
+        <label htmlFor="commission-category" className="label-caps text-charcoal/75 text-[10px]">
           {isInteriors ? 'Project Type' : 'Venue Type'}
           <span className="text-gold ml-1">*</span>
         </label>
@@ -131,7 +133,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
       {/* Budget + Timeline */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="flex flex-col gap-2">
-          <label htmlFor="commission-budget" className="label-caps text-charcoal/60 text-[10px]">
+          <label htmlFor="commission-budget" className="label-caps text-charcoal/75 text-[10px]">
             Approximate Budget
           </label>
           <select
@@ -146,7 +148,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
           </select>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="commission-timeline" className="label-caps text-charcoal/60 text-[10px]">
+          <label htmlFor="commission-timeline" className="label-caps text-charcoal/75 text-[10px]">
             Timeline
           </label>
           <select
@@ -164,7 +166,7 @@ export function CommissionForm({ variant }: CommissionFormProps) {
 
       {/* Notes */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="commission-notes" className="label-caps text-charcoal/60 text-[10px]">
+        <label htmlFor="commission-notes" className="label-caps text-charcoal/75 text-[10px]">
           {isInteriors
             ? 'Project Notes — palette, materials, scale, any reference images'
             : 'Project Notes — space, volume, special requirements'}
@@ -185,11 +187,18 @@ export function CommissionForm({ variant }: CommissionFormProps) {
         />
       </div>
 
-      {error && <p className="font-body text-xs text-red-500">{error}</p>}
+      <HoneypotField value={form.company_website} onChange={set('company_website')} />
+
+      {error && (
+        <p role="alert" className="font-body text-xs text-red-600">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"
         disabled={loading}
+        aria-busy={loading}
         className={cn(
           'h-12 label-caps transition-colors duration-300 mt-2',
           loading

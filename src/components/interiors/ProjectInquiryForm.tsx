@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { HoneypotField } from '@/components/ui/HoneypotField';
 
 const SPACE_TYPES = ['Hotel', 'Restaurant', 'Office', 'Retail', 'Residential', 'Other'];
 
@@ -20,6 +21,7 @@ export function ProjectInquiryForm({ defaultSpace = '' }: { defaultSpace?: strin
     spaceType: initialSpace,
     budget: '',
     description: '',
+    company_website: '', // honeypot
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -58,7 +60,7 @@ export function ProjectInquiryForm({ defaultSpace = '' }: { defaultSpace?: strin
         <h3 className="font-display text-3xl font-light text-charcoal mb-3">
           Thank you. We’re in touch.
         </h3>
-        <p className="font-body text-sm text-warm-gray leading-[1.9]">
+        <p className="font-body text-sm text-charcoal/70 leading-[1.9]">
           We review every project personally. You’ll hear from us within 1–2 business days — or book a
           consultation to speak with us sooner.
         </p>
@@ -68,7 +70,7 @@ export function ProjectInquiryForm({ defaultSpace = '' }: { defaultSpace?: strin
 
   const field = (id: keyof typeof form, label: string, required = false, type = 'text') => (
     <div className="flex flex-col gap-2">
-      <label htmlFor={`inq-${id}`} className="label-caps text-charcoal/60 text-[10px]">
+      <label htmlFor={`inq-${id}`} className="label-caps text-charcoal/75 text-[10px]">
         {label}
         {required && <span className="text-gold ml-1">*</span>}
       </label>
@@ -98,7 +100,7 @@ export function ProjectInquiryForm({ defaultSpace = '' }: { defaultSpace?: strin
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="inq-spaceType" className="label-caps text-charcoal/60 text-[10px]">
+        <label htmlFor="inq-spaceType" className="label-caps text-charcoal/75 text-[10px]">
           Type of Space<span className="text-gold ml-1">*</span>
         </label>
         <select
@@ -122,7 +124,7 @@ export function ProjectInquiryForm({ defaultSpace = '' }: { defaultSpace?: strin
       {field('budget', 'Estimated Budget or Volume')}
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="inq-description" className="label-caps text-charcoal/60 text-[10px]">
+        <label htmlFor="inq-description" className="label-caps text-charcoal/75 text-[10px]">
           Project Description<span className="text-gold ml-1">*</span>
         </label>
         <textarea
@@ -136,8 +138,10 @@ export function ProjectInquiryForm({ defaultSpace = '' }: { defaultSpace?: strin
         />
       </div>
 
+      <HoneypotField value={form.company_website} onChange={set('company_website')} />
+
       {error && (
-        <p role="alert" className="font-body text-xs text-red-500">
+        <p role="alert" className="font-body text-xs text-red-600">
           {error}
         </p>
       )}
@@ -154,7 +158,7 @@ export function ProjectInquiryForm({ defaultSpace = '' }: { defaultSpace?: strin
         {loading ? 'Sending…' : 'Submit Inquiry'}
       </button>
 
-      <p className="font-body text-xs text-warm-gray">
+      <p className="font-body text-xs text-charcoal/70">
         Or reach us at{' '}
         <a href="mailto:hello@lesfleursdesign.com" className="text-charcoal underline">
           hello@lesfleursdesign.com

@@ -1,7 +1,20 @@
 import type { NextRequest } from 'next/server';
 import { getShippingRates } from '@/lib/shipping';
+import { getClientIp } from '@/lib/clientIp';
+import { rateLimit, rateLimitHeaders } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
+  // Looser limit than the contact forms — a shopper may legitimately try a few
+  // ZIPs while browsing. This endpoint makes no external call (rates are
+  // computed locally), so the limit is just an anti-abuse backstop.
+  const rl = await rateLimit(`shipping:${getClientIp(req)}`, 30, 600_000);
+  if (!rl.success) {
+    return Response.json(
+      { error: 'Too many requests. Please try again shortly.' },
+      { status: 429, headers: rateLimitHeaders(rl) },
+    );
+  }
+
   let zip: string;
   let weightGrams: number;
   let orderSubtotal: number;

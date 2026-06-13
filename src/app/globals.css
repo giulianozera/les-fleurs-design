@@ -5,7 +5,7 @@
   --color-ivory:      #EDE6DA;   /* warm beige — main background */
   --color-ivory-dark: #F5F0E6;   /* soft cream — cards, secondary sections */
   --color-charcoal:   #0F0F0F;   /* near-black — primary text, dark surfaces */
-  --color-warm-gray:  #6B6661;   /* warm gray — secondary text, captions */
+  --color-warm-gray:  #5F5A55;   /* warm gray — secondary text, captions (WCAG AA: ~5.5:1 on ivory) */
   --color-stone:      #3A3733;   /* dark stone — hover states, accents */
   --color-gold:       #8A6F47;   /* muted gold — thin dividers and micro-icons only */
   --color-rose:       #A06855;   /* warm dusty rose — story section accent */

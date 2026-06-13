@@ -11,6 +11,9 @@ export async function sendEmail(opts: {
   to: string | string[];
   subject: string;
   html: string;
+  // Optional per-message SMTP/MIME headers (e.g. List-Unsubscribe for
+  // one-click opt-out on marketing email).
+  headers?: Record<string, string>;
 }): Promise<void> {
   if (!resend) return;
   const { error } = await resend.emails.send({ from: FROM, ...opts });

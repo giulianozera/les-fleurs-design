@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { supportEmail } from '@/lib/site-config';
 
 export const metadata: Metadata = {
   title: 'Shipping & Returns — Les Fleurs Design',
@@ -79,14 +80,14 @@ export default function ShippingPage() {
             <h2 className="label-caps text-charcoal mb-6">Returns & Damages</h2>
             <div className="w-full h-px bg-charcoal/10 mb-6" />
             <p className="font-body text-sm text-warm-gray leading-[1.9] mb-4">
-              Due to the nature of preserved botanical products, <strong className="text-charcoal font-medium">all sales are final</strong>. We do not accept returns or exchanges.
+              Because each arrangement is made-to-order and individually finished, <strong className="text-charcoal font-medium">all sales are final</strong>. We do not accept returns or exchanges.
             </p>
             <p className="font-body text-sm text-warm-gray leading-[1.9]">
               If your arrangement arrives damaged or defective, please contact us at{' '}
-              <a href="mailto:hello@lesfleursdesign.com" className="text-charcoal underline underline-offset-4">
-                hello@lesfleursdesign.com
+              <a href={`mailto:${supportEmail}`} className="text-charcoal underline underline-offset-4">
+                {supportEmail}
               </a>{' '}
-              within <strong className="text-charcoal font-medium">48 hours of delivery</strong> with your order number and photographs of the damage. We will assess the situation and arrange a replacement where applicable.
+              within <strong className="text-charcoal font-medium">7 days of delivery</strong> with your order number and photographs of the damage. We will assess the situation and arrange a replacement where applicable.
             </p>
           </section>
 

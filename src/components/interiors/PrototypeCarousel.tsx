@@ -98,13 +98,13 @@ export function PrototypeCarousel({
                 />
               ) : (
                 <div className="absolute inset-0 flex items-end p-4">
-                  <p className="label-caps text-charcoal/25 text-[9px]">{s.caption}</p>
+                  <p className="label-caps text-charcoal/60 text-[10px]">{s.caption}</p>
                 </div>
               )}
             </div>
             <figcaption className="mt-3.5 flex items-center gap-3">
               <div className="w-5 h-px bg-gold/70 shrink-0" />
-              <p className="font-body text-[11px] tracking-[0.18em] uppercase text-charcoal/70">
+              <p className="font-body text-[11px] tracking-[0.18em] uppercase text-charcoal/80">
                 {s.caption}
               </p>
             </figcaption>

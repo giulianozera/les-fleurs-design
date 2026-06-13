@@ -1,5 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { sendEmail, ADMIN } from '@/lib/resend';
+import { guardForm } from '@/lib/formGuard';
+import { commissionSchema } from '@/lib/formSchemas';
+import { escapeHtml } from '@/lib/escapeHtml';
 
 function layout(body: string): string {
   return `<!DOCTYPE html>
@@ -34,49 +37,32 @@ const p = (t: string) =>
 const divider = () => `<hr style="border:none;border-top:1px solid #E5DDD3;margin:20px 0;">`;
 
 export async function POST(req: NextRequest) {
-  let name: string,
-    email: string,
-    orgName: string,
-    category: string,
-    budget: string,
-    timeline: string,
-    notes: string,
-    variant: string;
+  const guard = await guardForm({ req, name: 'commissions', schema: commissionSchema });
+  if (guard.ok === 'spam') return Response.json({ ok: true });
+  if (!guard.ok) return guard.response;
 
-  try {
-    const body = await req.json();
-    name = String(body.name ?? '').trim();
-    email = String(body.email ?? '').trim();
-    orgName = String(body.orgName ?? '').trim();
-    category = String(body.category ?? '').trim();
-    budget = String(body.budget ?? '').trim();
-    timeline = String(body.timeline ?? '').trim();
-    notes = String(body.notes ?? '').trim();
-    variant = String(body.variant ?? 'business').trim();
-
-    if (!name || !email || !category || !notes) throw new Error();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error();
-  } catch {
-    return Response.json({ error: 'Please fill in all required fields.' }, { status: 400 });
-  }
+  const { name, email, orgName, category, budget, timeline, notes, variant } = guard.data;
 
   const pageLabel = variant === 'interiors' ? 'Interiors' : 'Business';
   const orgLabel = variant === 'interiors' ? 'Firm' : 'Business';
+
+  // Escape every user-supplied value before it enters the email HTML.
+  const e = escapeHtml;
 
   await sendEmail({
     to: ADMIN,
     subject: `New ${pageLabel} commission — ${orgName || name}`,
     html: layout(`
       ${h1(`New ${pageLabel} commission request.`)}
-      ${p(`<strong>Name:</strong> ${name}`)}
-      ${p(`<strong>Email:</strong> ${email}`)}
-      ${orgName ? p(`<strong>${orgLabel}:</strong> ${orgName}`) : ''}
-      ${p(`<strong>${variant === 'interiors' ? 'Project Type' : 'Venue Type'}:</strong> ${category}`)}
+      ${p(`<strong>Name:</strong> ${e(name)}`)}
+      ${p(`<strong>Email:</strong> ${e(email)}`)}
+      ${orgName ? p(`<strong>${orgLabel}:</strong> ${e(orgName)}`) : ''}
+      ${p(`<strong>${variant === 'interiors' ? 'Project Type' : 'Venue Type'}:</strong> ${e(category)}`)}
       ${divider()}
-      ${p(`<strong>Budget:</strong> ${budget}`)}
-      ${p(`<strong>Timeline:</strong> ${timeline}`)}
+      ${p(`<strong>Budget:</strong> ${e(budget)}`)}
+      ${p(`<strong>Timeline:</strong> ${e(timeline)}`)}
       ${divider()}
-      ${p(`<strong>Notes:</strong><br>${notes.replace(/\n/g, '<br>')}`)}
+      ${p(`<strong>Notes:</strong><br>${e(notes).replace(/\n/g, '<br>')}`)}
     `),
   });
 

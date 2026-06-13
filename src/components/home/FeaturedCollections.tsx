@@ -50,7 +50,7 @@ export function FeaturedCollections() {
         variants={stagger}
       >
         <div>
-          <motion.p className="label-caps text-charcoal/40 mb-3" variants={fadeUp}>
+          <motion.p className="label-caps text-charcoal/60 mb-3" variants={fadeUp}>
             Collections
           </motion.p>
           <motion.h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-light text-charcoal" variants={fadeUp}>
@@ -60,10 +60,10 @@ export function FeaturedCollections() {
         <motion.div variants={fadeUp} className="hidden md:block">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 label-caps text-charcoal/60 hover:text-charcoal transition-colors duration-300 group"
+            className="inline-flex items-center gap-2 label-caps text-charcoal/75 hover:text-charcoal transition-colors duration-300 group"
           >
             View All
-            <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight size={12} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </motion.div>
@@ -81,7 +81,7 @@ export function FeaturedCollections() {
             <Link href={`/shop?collection=${col.slug}`} className="group block">
               {/* Image container — 4:5 portrait */}
               <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
-                <p className="label-caps text-charcoal/30 tracking-widest">Coming Soon</p>
+                <p className="label-caps text-charcoal/55 tracking-widest">Coming Soon</p>
               </div>
               {/* Caption */}
               <div className="mt-4 flex items-start justify-between">
@@ -89,12 +89,13 @@ export function FeaturedCollections() {
                   <h3 className="font-display text-xl font-light text-charcoal group-hover:text-stone transition-colors duration-300">
                     {col.title}
                   </h3>
-                  <p className="font-body text-sm text-charcoal/50 mt-1 max-w-xs">{col.description}</p>
+                  <p className="font-body text-sm text-charcoal/70 mt-1 max-w-xs">{col.description}</p>
                 </div>
                 <ArrowRight
                   size={16}
                   strokeWidth={1.5}
-                  className="mt-1 flex-shrink-0 text-charcoal/30 transition-all duration-300 group-hover:text-stone group-hover:translate-x-1"
+                  aria-hidden="true"
+                  className="mt-1 flex-shrink-0 text-charcoal/40 transition-all duration-300 group-hover:text-stone group-hover:translate-x-1"
                 />
               </div>
             </Link>
@@ -106,10 +107,10 @@ export function FeaturedCollections() {
       <div className="mt-10 md:hidden text-center">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 label-caps text-charcoal/60 hover:text-charcoal transition-colors duration-300"
+          className="inline-flex items-center gap-2 label-caps text-charcoal/75 hover:text-charcoal transition-colors duration-300"
         >
           View All Collections
-          <ArrowRight size={12} />
+          <ArrowRight size={12} aria-hidden="true" />
         </Link>
       </div>
     </section>

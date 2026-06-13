@@ -27,7 +27,8 @@ export function CareAccordion({ instructions }: CareAccordionProps) {
             <ChevronRight
               size={14}
               strokeWidth={1.5}
-              className="text-warm-gray transition-transform duration-300 group-data-[state=open]:rotate-90"
+              aria-hidden="true"
+              className="text-charcoal/70 transition-transform duration-300 group-data-[state=open]:rotate-90"
             />
           </Accordion.Trigger>
         </Accordion.Header>
@@ -35,8 +36,8 @@ export function CareAccordion({ instructions }: CareAccordionProps) {
           <ul className="pb-6 flex flex-col gap-3">
             {items.map((instruction, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="mt-1.5 w-1 h-1 rounded-full bg-gold flex-shrink-0" />
-                <p className="font-body text-sm text-warm-gray leading-relaxed">{instruction}</p>
+                <span className="mt-1.5 w-1 h-1 rounded-full bg-gold flex-shrink-0" aria-hidden="true" />
+                <p className="font-body text-sm text-charcoal/70 leading-relaxed">{instruction}</p>
               </li>
             ))}
           </ul>
@@ -50,15 +51,17 @@ export function CareAccordion({ instructions }: CareAccordionProps) {
             <ChevronRight
               size={14}
               strokeWidth={1.5}
-              className="text-warm-gray transition-transform duration-300 group-data-[state=open]:rotate-90"
+              aria-hidden="true"
+              className="text-charcoal/70 transition-transform duration-300 group-data-[state=open]:rotate-90"
             />
           </Accordion.Trigger>
         </Accordion.Header>
         <Accordion.Content className="overflow-hidden data-[state=open]:animate-[slideDown_200ms_ease-out] data-[state=closed]:animate-[slideUp_200ms_ease-out]">
           <div className="pb-6">
-            <p className="font-body text-sm text-warm-gray leading-relaxed">
-              All orders ship via UPS from Miami, FL. Delivery within 3–7 business days to all 50 states.
-              Expedited shipping available at checkout. Orders placed before 2pm EST ship same day.
+            <p className="font-body text-sm text-charcoal/70 leading-relaxed">
+              All orders ship via UPS from Miami, FL to all 50 states. Orders are processed and
+              dispatched within 2–3 business days. Standard (UPS Ground) arrives in 5–7 business days;
+              Express (UPS 2nd Day Air) in 2–3 business days, available at checkout.
             </p>
           </div>
         </Accordion.Content>

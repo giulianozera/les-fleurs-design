@@ -29,7 +29,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           fill
           className="object-cover transition-opacity duration-500"
           sizes="(max-width: 1024px) 100vw, 55vw"
-          priority
+          preload
         />
       </div>
 

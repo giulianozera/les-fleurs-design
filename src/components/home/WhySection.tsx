@@ -46,7 +46,7 @@ export function WhySection() {
           viewport={{ once: true, margin: '-80px' }}
           variants={stagger}
         >
-          <motion.p className="label-caps text-charcoal/40 mb-3" variants={fadeUp}>
+          <motion.p className="label-caps text-charcoal/60 mb-3" variants={fadeUp}>
             Why Les Fleurs Design
           </motion.p>
           <motion.h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-light text-charcoal leading-tight" variants={fadeUp}>
@@ -66,11 +66,11 @@ export function WhySection() {
             <motion.div key={pillar.number} variants={fadeUp} className="relative">
               {/* Subtle divider line at top */}
               <div className="w-8 h-px bg-gold mb-8" />
-              <p className="label-caps text-warm-gray mb-4">{pillar.number}</p>
+              <p className="label-caps text-charcoal/60 mb-4">{pillar.number}</p>
               <h3 className="font-display text-2xl md:text-3xl font-light text-charcoal mb-4">
                 {pillar.title}
               </h3>
-              <p className="font-body text-sm leading-[1.8] text-charcoal/60">
+              <p className="font-body text-sm leading-[1.8] text-charcoal/75">
                 {pillar.body}
               </p>
             </motion.div>

@@ -26,7 +26,6 @@ export function OurStory() {
           fill
           sizes="100vw"
           className="object-cover object-center"
-          priority={false}
         />
         {/* Gradient overlay: fades to section bg at bottom */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-[#F9F6F2]" />
@@ -89,17 +88,17 @@ export function OurStory() {
             className="space-y-7"
           >
             <p className="story-lede font-display text-lg md:text-xl leading-[1.7] text-[#1C1C1A]/85">
-              I grew up watching my grandmother arrange flowers before every Sunday dinner — not
-              for ceremony, but because she believed a room with a flower in it was a room that
-              cared about itself. That conviction stayed with me long after the blooms had faded.
+              A room with a flower in it is a room that cares about itself. That simple
+              conviction sits behind everything Les Fleurs Design makes — beauty that does not
+              have to fade by the end of the week.
             </p>
 
             <p className="font-body text-base md:text-[17px] leading-[1.85] text-[#1C1C1A]/65">
-              Les Fleurs Design was born from a simple frustration: the most beautiful flowers
-              last days. The most beautiful spaces deserve something that endures. Working first
-              in Milan and now from Miami, I spent years studying preservation — the chemistry
-              of glycerin and pigment, the geometry of ceramic glazes, the patience a craftsman
-              brings to a single vessel. Every piece we make carries that same discipline.
+              The studio was born from a simple frustration: the most beautiful flowers last
+              days, while the most beautiful spaces deserve something that endures. So we work in
+              preservation — the chemistry of glycerin and pigment, the geometry of ceramic
+              glazes, the patience a single vessel demands. Every piece carries that same
+              discipline.
             </p>
 
             <p className="font-body text-base md:text-[17px] leading-[1.85] text-[#1C1C1A]/65">
@@ -111,15 +110,16 @@ export function OurStory() {
             </p>
 
             {/* Signature */}
+            {/* TODO: owner to supply real founder name + title to sign this section. */}
             <div className="pt-6 border-t border-[#A06855]/20">
               <p
                 className="font-script text-3xl text-[#A06855] mb-1"
                 style={{ fontFamily: 'var(--font-italianno), cursive' }}
               >
-                Matteo di Rosa
+                Les Fleurs Design
               </p>
-              <p className="font-body text-xs tracking-[0.15em] uppercase text-[#1C1C1A]/40">
-                Founder, Les Fleurs Design
+              <p className="font-body text-xs tracking-[0.15em] uppercase text-[#1C1C1A]/65">
+                Miami, Florida
               </p>
             </div>
           </motion.div>
@@ -138,8 +138,8 @@ export function OurStory() {
                 &ldquo;A flower that lasts a year asks a different question than one that dies in a
                 week. It asks: what is this space trying to say about itself?&rdquo;
               </p>
-              <footer className="mt-5 font-body text-xs tracking-[0.15em] uppercase text-[#A06855]/70">
-                — Matteo di Rosa
+              <footer className="mt-5 font-body text-xs tracking-[0.15em] uppercase text-[#8a5440]">
+                — Les Fleurs Design
               </footer>
             </blockquote>
 
@@ -147,7 +147,7 @@ export function OurStory() {
             <div className="relative aspect-[4/5] rounded-sm overflow-hidden bg-[#E8E0D5]">
               {/* TODO: replace with close-up atelier / petal detail photo */}
               <div className="absolute inset-0 flex items-end p-6">
-                <p className="font-body text-xs tracking-[0.12em] uppercase text-[#1C1C1A]/30">
+                <p className="font-body text-xs tracking-[0.12em] uppercase text-[#1C1C1A]/55">
                   Atelier detail — coming soon
                 </p>
               </div>

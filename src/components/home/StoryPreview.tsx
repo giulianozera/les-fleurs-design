@@ -30,7 +30,7 @@ export function StoryPreview() {
             viewport={{ once: true, margin: '-80px' }}
             variants={stagger}
           >
-            <motion.p className="label-caps text-ivory/30 mb-6" variants={fadeUp}>
+            <motion.p className="label-caps text-ivory/60 mb-6" variants={fadeUp}>
               Our Story
             </motion.p>
             <motion.h2
@@ -40,7 +40,7 @@ export function StoryPreview() {
               Built from a refusal to accept the temporary.
             </motion.h2>
             <motion.p
-              className="font-body text-sm text-ivory/50 leading-[2] mb-10 max-w-[42ch]"
+              className="font-body text-sm text-ivory/75 leading-[2] mb-10 max-w-[42ch]"
               variants={fadeUp}
             >
               {/* TODO: replace with real founder copy — 2–3 sentences, first-person */}
@@ -49,11 +49,12 @@ export function StoryPreview() {
             <motion.div variants={fadeUp}>
               <Link
                 href="/about"
-                className="inline-flex items-center gap-2.5 label-caps text-ivory/50 hover:text-ivory transition-colors duration-300 group"
+                className="inline-flex items-center gap-2.5 label-caps text-ivory/75 hover:text-ivory transition-colors duration-300 group"
               >
                 Read Our Story
                 <ArrowRight
                   size={11}
+                  aria-hidden="true"
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
               </Link>
@@ -74,14 +75,14 @@ export function StoryPreview() {
             >
               &ldquo;
             </span>
-            <blockquote className="font-display text-[clamp(1.5rem,2.8vw,2.5rem)] font-light italic text-ivory/60 leading-[1.35] mt-2">
+            <blockquote className="font-display text-[clamp(1.5rem,2.8vw,2.5rem)] font-light italic text-ivory/80 leading-[1.35] mt-2">
               {/* TODO: replace with a real founder quote */}
               Crafted for permanence.
               <br />
               Designed for distinction.
             </blockquote>
             <div className="mt-8 w-8 h-px bg-gold" />
-            <p className="label-caps text-ivory/20 mt-4">
+            <p className="label-caps text-ivory/60 mt-4">
               {/* TODO: founder name / title */}
               Founder, Les Fleurs Design
             </p>

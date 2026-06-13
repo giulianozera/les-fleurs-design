@@ -97,6 +97,25 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return safeFetch<Product | null>(query, { slug }, null);
 }
 
+export type AuthoritativeProduct = {
+  _id: string;
+  title: string;
+  basePrice: number;
+  stockQuantity: number;
+};
+
+export async function getProductById(id: string): Promise<AuthoritativeProduct | null> {
+  const query = groq`
+    *[_type == "product" && _id == $id][0] {
+      _id,
+      title,
+      basePrice,
+      stockQuantity,
+    }
+  `;
+  return safeFetch<AuthoritativeProduct | null>(query, { id }, null);
+}
+
 export async function getRelatedProducts(
   collectionId: string,
   excludeId: string,

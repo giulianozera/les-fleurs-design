@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FooterNewsletter } from './FooterNewsletter';
+import { legalName, formatMailingAddress } from '@/lib/site-config';
 
 const shopLinks = [
   { href: '/shop', label: 'All Products' },
@@ -21,6 +22,7 @@ const infoLinks = [
   { href: '/shipping', label: 'Shipping & Returns' },
   { href: '/privacy', label: 'Privacy Policy' },
   { href: '/terms', label: 'Terms of Service' },
+  { href: '/accessibility', label: 'Accessibility' },
 ];
 
 export function Footer() {
@@ -124,9 +126,14 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-ivory/10 py-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-body text-xs text-ivory/30">
-            © {new Date().getFullYear()} Les Fleurs Design. All rights reserved.
-          </p>
+          <div className="flex flex-col gap-1">
+            <p className="font-body text-xs text-ivory/30">
+              © {new Date().getFullYear()} Les Fleurs Design. All rights reserved.
+            </p>
+            <p className="font-body text-xs text-ivory/50">
+              {legalName} · {formatMailingAddress()}
+            </p>
+          </div>
           <div className="flex items-center gap-3">
             {['Visa', 'Mastercard', 'Amex'].map((method) => (
               <span key={method} className="label-caps text-[9px] text-ivory/25 border border-ivory/10 px-1.5 py-0.5 rounded-sm">

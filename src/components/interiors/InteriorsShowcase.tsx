@@ -16,24 +16,30 @@ interface Track {
   slides: PrototypeSlide[];
 }
 
-// Commercial uses the real hospitality photography already in /public/business.
+// Concept visualizations, not photographs of completed client installations.
+// The /public/business images are design renders showing how a preserved-rose
+// piece could sit in a given type of space — they are not real, named venues.
+// TODO: replace concept renders containing fabricated third-party brand signage
+// (AURUM HOLDINGS / THE EMPEROR) baked into the image files with original imagery.
 const COMMERCIAL_SLIDES: PrototypeSlide[] = [
-  { src: '/business/hotel lobby.jpg', caption: 'Hotel Lobby', alt: 'Hotel lobby installation', ratio: '16/9' },
-  { src: '/business/private member club .png', caption: "Private Members' Club", alt: "Private members' club arrangement", ratio: '3/4' },
-  { src: '/business/restourant table.jpg', caption: 'Restaurant', alt: 'Restaurant table arrangement', ratio: '4/3' },
-  { src: '/business/Suite_amenity_—_blue_porcelain_202605282258.jpeg', caption: 'Suite Amenity', alt: 'Suite amenity — blue porcelain vessel', ratio: '3/4' },
-  { src: '/business/event inistallation.JPG', caption: 'Event Installation', alt: 'Event floral installation', ratio: '4/3' },
-  { src: '/business/corporate .png', caption: 'Corporate Reception', alt: 'Corporate reception arrangement', ratio: '16/9' },
+  { src: '/business/hotel lobby.jpg', caption: 'Concept — Hotel Lobby', alt: 'Design concept: preserved-rose arrangement in a hotel lobby setting', ratio: '16/9' },
+  { src: '/business/private member club .png', caption: "Concept — Private Members' Club", alt: "Design concept: arrangement in a private members' club setting", ratio: '3/4' },
+  { src: '/business/restourant table.jpg', caption: 'Concept — Restaurant', alt: 'Design concept: arrangement on a restaurant table', ratio: '4/3' },
+  { src: '/business/Suite_amenity_—_blue_porcelain_202605282258.jpeg', caption: 'Concept — Suite Amenity', alt: 'Design concept: suite amenity in a blue porcelain vessel', ratio: '3/4' },
+  { src: '/business/event inistallation.JPG', caption: 'Concept — Event Installation', alt: 'Design concept: event floral installation', ratio: '4/3' },
+  { src: '/business/corporate .png', caption: 'Concept — Corporate Reception', alt: 'Design concept: arrangement in a corporate reception setting', ratio: '16/9' },
 ];
 
-// Residential placeholders — swap in real project images when available.
-// TODO: replace with <PrototypeSlide src="…"> once prototype photography is shot.
+// Residential concept placeholders — no images yet, so these render as labelled
+// tiles. Captions describe space *types*, not real, named client projects.
+// TODO: replace with <PrototypeSlide src="…"> once original concept renders or
+// real, owner-approved project photography is available.
 const RESIDENTIAL_SLIDES: PrototypeSlide[] = [
-  { caption: 'Living Room — Private Residence', ratio: '16/9' },
-  { caption: 'Entryway — Miami Penthouse', ratio: '3/4' },
-  { caption: 'Master Bedroom — Detail', ratio: '4/3' },
-  { caption: 'Library Corner — Travertine Vessel', ratio: '3/4' },
-  { caption: 'Dining Room — Blue Porcelain Dome', ratio: '16/9' },
+  { caption: 'Concept — Living Room', ratio: '16/9' },
+  { caption: 'Concept — Entryway', ratio: '3/4' },
+  { caption: 'Concept — Bedroom Detail', ratio: '4/3' },
+  { caption: 'Concept — Library Corner', ratio: '3/4' },
+  { caption: 'Concept — Dining Room', ratio: '16/9' },
 ];
 
 const TRACKS: Track[] = [
@@ -72,33 +78,47 @@ export function InteriorsShowcase() {
             <button
               key={t.id}
               role="tab"
+              id={`interiors-tab-${t.id}`}
               aria-selected={active === t.id}
+              aria-controls={`interiors-panel-${t.id}`}
               onClick={() => setActive(t.id)}
               className={cn(
                 'px-6 py-3 label-caps text-[10px] transition-colors duration-300',
                 active === t.id
                   ? 'bg-charcoal text-ivory'
-                  : 'text-charcoal/55 hover:text-charcoal',
+                  : 'text-charcoal/70 hover:text-charcoal',
               )}
             >
               {t.label}
             </button>
           ))}
         </div>
-        <p className="label-caps text-warm-gray text-[10px]">{track.eyebrow}</p>
+        <p className="label-caps text-charcoal/70 text-[10px]">{track.eyebrow}</p>
       </div>
 
-      {/* Per-track intro */}
-      <p className="font-body text-sm md:text-base text-warm-gray leading-[1.9] max-w-[58ch] mb-10 md:mb-12">
-        {track.line}
-      </p>
+      {/* Tab panel for the active track */}
+      <div
+        role="tabpanel"
+        id={`interiors-panel-${track.id}`}
+        aria-labelledby={`interiors-tab-${track.id}`}
+      >
+        {/* Concept eyebrow — these are design visualizations, not photos of real client projects */}
+        <p className="label-caps text-charcoal/55 text-[10px] mb-3">
+          Concept Visualizations
+        </p>
 
-      {/* Carousel — re-keyed per track so it resets scroll/edges on switch */}
-      <PrototypeCarousel
-        key={track.id}
-        slides={track.slides}
-        ariaLabel={`${track.label} project prototypes`}
-      />
+        {/* Per-track intro */}
+        <p className="font-body text-sm md:text-base text-charcoal/75 leading-[1.9] max-w-[58ch] mb-10 md:mb-12">
+          {track.line}
+        </p>
+
+        {/* Carousel — re-keyed per track so it resets scroll/edges on switch */}
+        <PrototypeCarousel
+          key={track.id}
+          slides={track.slides}
+          ariaLabel={`${track.label} project prototypes`}
+        />
+      </div>
 
       {/* CTA */}
       <div className="mt-12 md:mt-16 flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -110,9 +130,9 @@ export function InteriorsShowcase() {
         </Link>
         <Link
           href="/interiors/inquire#book"
-          className="label-caps text-charcoal/50 hover:text-charcoal transition-colors duration-300"
+          className="label-caps text-charcoal/70 hover:text-charcoal transition-colors duration-300"
         >
-          Or book a consultation →
+          Or book a consultation <span aria-hidden="true">→</span>
         </Link>
       </div>
     </section>

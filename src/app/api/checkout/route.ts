@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import Stripe from 'stripe';
 import type { CartItem } from '@/store/cartStore';
 import { getShippingRates, toStripeShippingOptions } from '@/lib/shipping';
+import { getProductById } from '@/sanity/queries';
 
 function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -16,16 +17,29 @@ export async function POST(req: NextRequest) {
   }
 
   let items: CartItem[];
+  let termsAccepted: unknown;
   try {
     const body = await req.json();
     items = body.items;
+    termsAccepted = body.termsAccepted;
     if (!Array.isArray(items) || items.length === 0) throw new Error();
   } catch {
     return Response.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
+  // Gate checkout on explicit Terms of Service consent. The cart sends
+  // { items, termsAccepted: true }; reject anything that isn't strictly true.
+  if (termsAccepted !== true) {
+    return Response.json(
+      { error: 'You must accept the Terms of Service to checkout' },
+      { status: 400 },
+    );
+  }
+
   for (const item of items) {
     if (
+      typeof item.productId !== 'string' ||
+      !item.productId.trim() ||
       typeof item.title !== 'string' ||
       !item.title.trim() ||
       !Number.isFinite(item.price) ||
@@ -38,9 +52,56 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // SECURITY: never trust the client-supplied item.price. Re-fetch every cart
+  // line from Sanity by its productId and charge the authoritative basePrice.
+  // A tampered price in the request body therefore cannot change the charge.
+  const authoritativeProducts = await Promise.all(
+    items.map((item) => getProductById(item.productId)),
+  );
+
+  // Pair each cart line with its authoritative Sanity product, rejecting any
+  // line whose product no longer exists, is out of stock, or has an invalid
+  // server-side price.
+  const pricedItems: { item: CartItem; basePrice: number; title: string }[] = [];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const product = authoritativeProducts[i];
+
+    if (!product) {
+      return Response.json(
+        { error: 'One or more items are no longer available' },
+        { status: 400 },
+      );
+    }
+
+    if (typeof product.stockQuantity === 'number' && product.stockQuantity <= 0) {
+      return Response.json(
+        { error: 'One or more items are out of stock' },
+        { status: 400 },
+      );
+    }
+
+    if (!Number.isFinite(product.basePrice) || product.basePrice <= 0) {
+      return Response.json(
+        { error: 'One or more items are no longer available' },
+        { status: 400 },
+      );
+    }
+
+    pricedItems.push({ item, basePrice: product.basePrice, title: product.title });
+  }
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
-  const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  // Subtotal is computed from authoritative prices, not the client's.
+  const subtotal = pricedItems.reduce(
+    (sum, { basePrice, item }) => sum + basePrice * item.quantity,
+    0,
+  );
+
+  // Record the server-side time of consent as an ISO-8601 string. Stamped at
+  // request time so it reflects when the customer actually accepted the Terms.
+  const consentAt = new Date().toISOString();
 
   try {
     const shippingRates = await getShippingRates('00000', 500, subtotal);
@@ -52,16 +113,29 @@ export async function POST(req: NextRequest) {
       // pull cards saved on the customer's phone) based on the device + the
       // methods enabled in the Stripe Dashboard.
       mode: 'payment',
-      line_items: items.map((item) => ({
+      // automatic_tax requires a collected customer address; billing_address_
+      // collection: 'required' + the shipping collection below satisfy that.
+      // TODO: Stripe Tax must be enabled in the Dashboard and sales-tax
+      // registrations completed per-state (FL + economic-nexus states) with an
+      // accountant — code enables collection only.
+      automatic_tax: { enabled: true },
+      billing_address_collection: 'required',
+      line_items: pricedItems.map(({ item, basePrice, title }) => ({
         price_data: {
           currency: 'usd',
           product_data: {
-            name: item.title,
+            // Authoritative title from Sanity (not the client's).
+            name: title,
             description:
               [item.colorName, item.potName].filter(Boolean).join(' · ') || undefined,
+            // Client image is display-only and never affects the charge.
             images: item.imageUrl ? [item.imageUrl] : [],
+            // TODO: confirm txcd_99999999 is the correct Stripe tax category
+            // for the products. (txcd_99999999 = general tangible goods.)
+            tax_code: 'txcd_99999999',
           },
-          unit_amount: Math.round(item.price * 100),
+          // Charge the authoritative Sanity basePrice — item.price is ignored.
+          unit_amount: Math.round(basePrice * 100),
         },
         quantity: item.quantity,
       })),
@@ -72,15 +146,19 @@ export async function POST(req: NextRequest) {
       cancel_url: `${siteUrl}/cart`,
       metadata: {
         items: JSON.stringify(
-          items.map((i) => ({
-            productId: i.productId,
-            title: i.title,
-            colorName: i.colorName ?? null,
-            potName: i.potName ?? null,
-            quantity: i.quantity,
-            price: i.price,
+          pricedItems.map(({ item, basePrice, title }) => ({
+            productId: item.productId,
+            // Store the authoritative title + price so the order record and
+            // webhook reflect exactly what Stripe charged.
+            title,
+            colorName: item.colorName ?? null,
+            potName: item.potName ?? null,
+            quantity: item.quantity,
+            price: basePrice,
           })),
         ),
+        termsAccepted: 'true',
+        termsAcceptedAt: consentAt,
       },
     });
 

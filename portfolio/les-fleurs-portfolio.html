@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Les Fleurs Design — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@400;500&family=Italianno&display=swap" rel="stylesheet" />
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    --ivory:#FAF7F2; --ivory-dark:#EDE6DA; --charcoal:#1A1A1A; --ink:#0F0F0F;
+    --warm:#6B6661; --gold:#B8935A; --terra:#A06855; --blush:#E8C5C0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { background:#8c8c8c; }
+  body { font-family:'Inter',Helvetica,Arial,sans-serif; color:var(--ink); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .serif { font-family:'Cormorant Garamond',Georgia,serif; font-weight:300; }
+  .caps { font-family:'Inter',sans-serif; text-transform:uppercase; letter-spacing:0.22em; font-size:10px; font-weight:500; }
+  .script { font-family:'Italianno',cursive; }
+  .gold-rule { width:40px; height:1px; background:var(--gold); border:0; }
+
+  .page { position:relative; width:210mm; height:297mm; margin:0 auto; background:var(--ivory); overflow:hidden; page-break-after:always; }
+  .page:last-child { page-break-after:auto; }
+  .pad { padding:24mm 22mm; height:100%; display:flex; flex-direction:column; }
+  .eyebrow { color:var(--warm); margin-bottom:14px; }
+  h2.section { font-size:38px; line-height:1.06; color:var(--ink); }
+  .body { font-size:13px; line-height:1.95; color:var(--warm); }
+
+  /* ── Cover (full-bleed lifestyle) ── */
+  .cover { background:var(--charcoal); }
+  .cover .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .cover .scrim { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.04) 30%, rgba(0,0,0,0.24) 58%, rgba(0,0,0,0.88) 100%); }
+  .cover .c { position:absolute; inset:0; z-index:2; padding:22mm 20mm; display:flex; flex-direction:column; color:var(--ivory); }
+  .cover .wordmark { color:#fff; }
+  .cover .sub { color:rgba(255,255,255,0.7); margin-top:8px; }
+  .cover h1 { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:52px; line-height:1.0; margin-top:auto; }
+  .cover .tagline { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:20px; color:rgba(255,255,255,0.94); margin-top:16px; }
+  .cover .meta { margin-top:18px; color:rgba(255,255,255,0.72); }
+
+  /* ── Story ── */
+  .story-grid { margin-top:8mm; display:grid; grid-template-columns:1fr 62mm; gap:13mm; align-items:start; }
+  .story-lede { font-family:'Cormorant Garamond',serif; font-size:21px; line-height:1.5; color:rgba(15,15,15,0.9); margin-bottom:15px; }
+  .story p.body { margin-bottom:12px; }
+  .portrait { width:100%; aspect-ratio:3/4; object-fit:cover; object-position:top; background:var(--ivory-dark); }
+  .sig { margin-top:14px; padding-top:13px; border-top:1px solid rgba(160,104,85,0.25); }
+  .sig .name { font-family:'Italianno',cursive; font-size:42px; color:var(--terra); line-height:0.9; }
+  .sig .role { font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:rgba(15,15,15,0.32); margin-top:4px; }
+
+  /* ── Collections ── */
+  .coll { background:var(--ivory-dark); }
+  .col3 { margin-top:9mm; display:grid; grid-template-columns:repeat(3,1fr); gap:6mm; }
+  .col3 .c img { width:100%; height:118mm; object-fit:cover; background:var(--ivory); }
+  .col3 .name { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:var(--ink); margin-top:11px; }
+  .col3 .k { font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-top:3px; }
+  .col3 .d { font-size:11px; color:var(--warm); line-height:1.6; margin-top:7px; }
+
+  /* ── Detail / every angle ── */
+  .detail-grid { margin-top:9mm; display:grid; grid-template-columns:1fr 1fr; gap:10mm; align-items:start; }
+  .detail-grid img.macro { width:100%; height:150mm; object-fit:cover; }
+  .detail-grid img.angles { width:100%; object-fit:contain; background:var(--ivory-dark); }
+  .detail-note { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-top:14px; }
+
+  /* ── For Business ── */
+  .biz-shots { margin-top:9mm; display:grid; grid-template-columns:1fr 1fr; gap:5mm; }
+  .biz-shots img { width:100%; height:48mm; object-fit:cover; }
+  .offer-grid { margin-top:9mm; display:grid; grid-template-columns:1fr 1fr; gap:8mm 12mm; }
+  .aud { border-top:1px solid rgba(26,26,26,0.12); padding-top:10px; }
+  .aud h3 { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:20px; color:var(--ink); }
+  .aud p { font-size:11px; color:var(--warm); line-height:1.6; margin-top:4px; }
+  .services { margin-top:auto; padding-top:12px; border-top:1px solid rgba(26,26,26,0.12); display:flex; gap:22px; flex-wrap:wrap; }
+  .services span { color:var(--ink); }
+
+  /* ── Contact ── */
+  .contact { background:var(--charcoal); color:var(--ivory); }
+  .contact h2 { color:var(--ivory); }
+  .contact .body { color:rgba(250,247,242,0.6); }
+  .contact .rows { margin-top:auto; display:grid; grid-template-columns:1fr 1fr; gap:9mm 12mm; }
+  .crow .k { color:var(--gold); margin-bottom:6px; }
+  .crow .v { font-size:15px; color:rgba(250,247,242,0.92); }
+
+  @media screen {
+    body { padding:22px 0; }
+    .page { box-shadow:0 6px 40px rgba(0,0,0,0.3); margin-bottom:26px; }
+    .hint { max-width:210mm; margin:0 auto 18px; color:#eee; font-size:12px; text-align:center; }
+  }
+  @media print { .hint { display:none; } }
+</style>
+</head>
+<body>
+
+<p class="hint">Screen preview — export the PDF with ⌘P / Ctrl-P → “Save as PDF”, paper A4, margins “None”, “Background graphics” ON.</p>
+
+<!-- ───── 1 · COVER ───── -->
+<section class="page cover">
+  <img class="bg" src="./assets/cover.jpg" alt="Preserved roses styled in a Miami penthouse" />
+  <div class="scrim"></div>
+  <div class="c">
+    <div>
+      <div class="caps wordmark">Les Fleurs Design</div>
+      <div class="caps sub">Portfolio · 2026</div>
+    </div>
+    <h1>Eternal roses,<br/>composed as<br/>objects of design.</h1>
+    <p class="tagline">Crafted for permanence. Designed for distinction.</p>
+    <div class="caps meta">lesfleursdesign.com&nbsp;&nbsp;·&nbsp;&nbsp;Miami, Florida</div>
+  </div>
+</section>
+
+<!-- ───── 2 · STORY ───── -->
+<section class="page">
+  <div class="pad">
+    <div class="caps eyebrow">Our Story</div>
+    <h2 class="section serif">Four generations,<br/>one obsession.</h2>
+    <div class="story story-grid">
+      <div>
+        <p class="story-lede">My name is Matteo di Rosa, and I come from a family in Italy that has worked with flowers for four generations.</p>
+        <p class="body">I was raised between the cutting rooms and cold storage of my family’s atelier — where my grandfather taught me that a single bloom, handled correctly, could carry an entire room. My father arranged the villas. My mother arranged the churches.</p>
+        <p class="body">Les Fleurs Design is the form that inheritance takes here in Miami. I founded the studio to bring our family’s craft — the patience, the obsession with material, the refusal to accept that beauty must be brief — into a new language. Real roses. Real ceramic. Real permanence.</p>
+        <p class="body">What we make is the opposite of a cut bouquet: roses preserved at peak bloom, vessels hand-formed by independent artisans, objects engineered to last a year on a console, a front desk, a dining room, a private suite. The flowers are still real — they have simply been given more time.</p>
+        <div class="sig">
+          <div class="name script">Matteo di Rosa</div>
+          <div class="role">Founder &amp; Designer</div>
+        </div>
+      </div>
+      <div>
+        <img class="portrait" src="./assets/matteo.jpg" alt="Matteo di Rosa, Founder of Les Fleurs Design" />
+        <p class="caps" style="margin-top:10px; color:rgba(15,15,15,0.3); text-align:center; font-size:9px;">Matteo di Rosa · Miami Atelier</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 3 · THE COLLECTIONS ───── -->
+<section class="page coll">
+  <div class="pad">
+    <div class="caps eyebrow">The Collections</div>
+    <h2 class="section serif">Three houses, one standard.</h2>
+    <div class="col3">
+      <div class="c">
+        <img src="https://cdn.sanity.io/images/cpr2go84/production/b5398e56392a0014c4670559145a56c2e62203ef-3584x4780.png?w=820&h=1100&fit=crop&auto=format&q=82" alt="Maison Collection — Ribbed" />
+        <div class="name serif">Maison Collection</div>
+        <div class="k">Ribbed</div>
+        <div class="d">Fluted vessels and full domes — the house signature, in every rose color.</div>
+      </div>
+      <div class="c">
+        <img src="https://cdn.sanity.io/images/cpr2go84/production/49868cee530096c4e7070dbe01710485ab660d83-3584x4780.png?w=820&h=1100&fit=crop&auto=format&q=82" alt="Rosa Aeterna — Eternal Bloom" />
+        <div class="name serif">Rosa Aeterna</div>
+        <div class="k">Eternal Bloom</div>
+        <div class="d">Single-bloom studies in porcelain and stone — quiet, sculptural, exact.</div>
+      </div>
+      <div class="c">
+        <img src="https://cdn.sanity.io/images/cpr2go84/production/7c8a79a88afe2a49c9604c0fab28947e8ae92b82-2048x2048.jpg?w=820&h=1100&fit=crop&auto=format&q=82" alt="David Collection" />
+        <div class="name serif">David</div>
+        <div class="k">Sculpted Form</div>
+        <div class="d">A sculptural vessel in black and white — architecture for the bloom.</div>
+      </div>
+    </div>
+    <p class="body" style="margin-top:auto; padding-top:8mm; max-width:64ch;">Every arrangement is composed in a hand-formed ceramic, porcelain, or stone vessel — no water, no upkeep, no wilt. Bespoke palettes, scales, and vessels are available on commission.</p>
+  </div>
+</section>
+
+<!-- ───── 4 · THE OBJECT / EVERY ANGLE ───── -->
+<section class="page">
+  <div class="pad">
+    <div class="caps eyebrow">The Object</div>
+    <h2 class="section serif">Considered from<br/>every angle.</h2>
+    <div class="detail-grid">
+      <img class="macro" src="./assets/macro.jpg" alt="Preserved red roses in a ribbed vessel — detail" />
+      <div>
+        <img class="angles" src="./assets/angles.jpg" alt="The same piece, viewed from every angle" />
+        <p class="body" style="margin-top:12px;">Each piece is composed, photographed, and approved from every side — front, profile, and crown — before it leaves the atelier. Roses set petal by petal; vessels chosen for the room they’ll hold.</p>
+        <p class="detail-note">360° walkaround available on any commission</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 5 · FOR BUSINESS ───── -->
+<section class="page">
+  <div class="pad">
+    <div class="caps eyebrow">For Business</div>
+    <h2 class="section serif">The space becomes<br/>the statement.</h2>
+    <div class="biz-shots">
+      <img src="./assets/hotel.jpg" alt="Hotel lobby installation" />
+      <img src="./assets/restaurant.jpg" alt="Restaurant arrangement" />
+    </div>
+    <div class="offer-grid">
+      <div class="aud"><h3>Hotels &amp; Resorts</h3><p>Lobbies, suites, spa, and amenity programs across many rooms.</p></div>
+      <div class="aud"><h3>Restaurants &amp; Bars</h3><p>Tables, host stands, and private-dining pieces that never wilt.</p></div>
+      <div class="aud"><h3>Offices &amp; Retail</h3><p>Reception, executive, and showroom spaces — zero maintenance.</p></div>
+      <div class="aud"><h3>Private Residences</h3><p>Commissioned with interior designers to an exact brief.</p></div>
+    </div>
+    <div class="services caps">
+      <span>Custom Commissions</span>
+      <span>Volume &amp; Recurring Programs</span>
+      <span>Trade Pricing</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───── 6 · CONTACT ───── -->
+<section class="page contact">
+  <div class="pad">
+    <div class="caps eyebrow" style="color:var(--gold);">Start a Project</div>
+    <h2 class="section serif">Let’s design<br/>something permanent.</h2>
+    <hr class="gold-rule" style="margin:22px 0;" />
+    <p class="body" style="max-width:50ch;">Every commission begins with a conversation — scale, palette, vessel, and the feeling the room needs to hold. We return a proposal within one week, with volume and recurring programs for multi-room and multi-location partners.</p>
+    <div class="rows">
+      <div class="crow"><div class="caps k">Email</div><div class="v">lesfleurscompany@gmail.com</div></div>
+      <div class="crow"><div class="caps k">Phone</div><div class="v">(786) 852-3925</div></div>
+      <div class="crow"><div class="caps k">Instagram</div><div class="v">@lesfleurs_design</div></div>
+      <div class="crow"><div class="caps k">Consultations</div><div class="v">lesfleursdesign.com/interiors</div></div>
+      <div class="crow"><div class="caps k">Studio</div><div class="v">Miami, Florida · Ships across the U.S.</div></div>
+      <div class="crow"><div class="caps k">Web</div><div class="v">lesfleursdesign.com</div></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

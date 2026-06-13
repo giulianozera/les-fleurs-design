@@ -48,7 +48,17 @@ const variants = {
 export function BusinessCarousel() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [paused, setPaused] = useState(false);
+  const [hovering, setHovering] = useState(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  // Read prefers-reduced-motion after mount (SSR-safe; avoids a hydration mismatch).
+  useEffect(() => {
+    setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }, []);
+
+  // Auto-advance stops on hover, on explicit pause, or when reduced motion is requested.
+  const playing = !hovering && !userPaused && !reducedMotion;
 
   const goTo = useCallback(
     (index: number, dir?: number) => {
@@ -64,16 +74,16 @@ export function BusinessCarousel() {
 
   /* Auto-advance */
   useEffect(() => {
-    if (paused) return;
+    if (!playing) return;
     const id = setTimeout(next, SLIDE_DURATION);
     return () => clearTimeout(id);
-  }, [current, paused, next]);
+  }, [current, playing, next]);
 
   return (
     <div
       className="relative w-full select-none"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
       {/* ── Image stage ── */}
       <div className="relative w-full h-[440px] md:h-[620px] overflow-hidden bg-[#1C1C1A]">
@@ -117,10 +127,32 @@ export function BusinessCarousel() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Slide counter */}
-          <p className="font-body text-[10px] tracking-[0.18em] text-white/35">
-            {String(current + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
-          </p>
+          {/* Slide counter + pause/play */}
+          <div className="flex items-center gap-4">
+            {!reducedMotion && (
+              <button
+                type="button"
+                onClick={() => setUserPaused((p) => !p)}
+                aria-label={userPaused ? 'Play slideshow' : 'Pause slideshow'}
+                aria-pressed={userPaused}
+                className="w-7 h-7 flex items-center justify-center border border-white/30 text-white/90 hover:bg-white/10 transition-colors duration-200"
+              >
+                {userPaused ? (
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+                    <path d="M2 1l6 4-6 4z" />
+                  </svg>
+                ) : (
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+                    <rect x="2" y="1" width="2.2" height="8" />
+                    <rect x="5.8" y="1" width="2.2" height="8" />
+                  </svg>
+                )}
+              </button>
+            )}
+            <p className="font-body text-[10px] tracking-[0.18em] text-white/80">
+              {String(current + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+            </p>
+          </div>
         </div>
 
         {/* ── Arrow buttons ── */}

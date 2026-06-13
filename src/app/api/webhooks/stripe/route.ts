@@ -95,6 +95,8 @@ export async function POST(req: NextRequest) {
             shipping_cents: session.total_details?.amount_shipping ?? 0,
             total_cents: session.amount_total ?? 0,
             status: 'paid',
+            terms_consent: session.metadata?.termsAccepted === 'true',
+            consent_at: session.metadata?.termsAcceptedAt ?? null,
           })
           .select('id')
           .single();

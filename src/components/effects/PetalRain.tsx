@@ -66,6 +66,9 @@ export function PetalRain() {
   const lastScroll = useRef(0);
   const throttle = useRef(false);
 
+  // prefers-reduced-motion is honored by reading the media query live inside
+  // each effect below, so no petals are ever added for those users.
+
   const add = useCallback((newOnes: Petal[]) => {
     setPetals((prev) => [...prev, ...newOnes].slice(-MAX_PETALS));
   }, []);
@@ -77,13 +80,18 @@ export function PetalRain() {
   // Page-transition burst
   useEffect(() => {
     if (firstRender.current) { firstRender.current = false; return; }
-    const isMobile = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
-    add(burst(isMobile ? 12 : 22));
+    // Read reduced-motion live so this effect's deps stay [pathname, add].
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced) {
+      const isMobile = window.matchMedia('(pointer: coarse)').matches;
+      add(burst(isMobile ? 12 : 22));
+    }
   }, [pathname, add]);
 
   // Scroll petals
   useEffect(() => {
     function onScroll() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const delta = Math.abs(window.scrollY - lastScroll.current);
       lastScroll.current = window.scrollY;
       if (delta < 40 || throttle.current) return;

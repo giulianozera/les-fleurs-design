@@ -50,7 +50,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-[#EDE6DA]">
-              <span className="label-caps text-warm-gray text-xs">No image</span>
+              <span className="label-caps text-charcoal/70 text-xs">No image</span>
             </div>
           )}
           <div
@@ -66,7 +66,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Card info */}
       <div className="mt-3 px-0.5">
         {product.collection && (
-          <p className="label-caps text-warm-gray mb-1">{product.collection.title}</p>
+          <p className="label-caps text-charcoal/70 mb-1">{product.collection.title}</p>
         )}
         <Link href={`/shop/${product.slug.current}`} className="flex items-start justify-between gap-2">
           <h3 className="font-display text-[1.125rem] font-light text-charcoal group-hover:text-stone transition-colors duration-300 leading-snug">
@@ -78,35 +78,43 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
         {/* Color swatches */}
         {product.colorVariants.length > 0 ? (
-          <div className="flex items-center gap-1.5 mt-2">
+          <div className="flex items-center mt-2 -ml-1.5">
             {product.colorVariants.slice(0, 6).map((v) => (
               <Link
                 key={v.colorId}
                 href={`/shop/${v.productSlug}`}
-                className="w-3 h-3 rounded-full border border-charcoal/10 flex-shrink-0 hover:scale-125 transition-transform duration-200"
-                style={{ backgroundColor: v.colorHex }}
+                className="group/swatch flex h-6 w-6 items-center justify-center flex-shrink-0"
                 title={v.colorName}
                 aria-label={`${product.title} in ${v.colorName}`}
-              />
+              >
+                <span
+                  className="block w-3 h-3 rounded-full border border-charcoal/10 transition-transform duration-200 group-hover/swatch:scale-125"
+                  style={{ backgroundColor: v.colorHex }}
+                />
+              </Link>
             ))}
             {product.colorVariants.length > 6 && (
-              <span className="label-caps text-warm-gray">+{product.colorVariants.length - 6}</span>
+              <span className="label-caps text-charcoal/70 ml-1">+{product.colorVariants.length - 6}</span>
             )}
           </div>
         ) : product.roseColors.length > 0 ? (
-          <div className="flex items-center gap-1.5 mt-2">
+          <div className="flex items-center mt-2 -ml-1.5">
             {product.roseColors.slice(0, 6).map((color) => (
               <Link
                 key={color._id}
                 href={`/shop/${product.slug.current}?color=${color.slug.current}`}
-                className="w-3 h-3 rounded-full border border-charcoal/10 flex-shrink-0 hover:scale-125 transition-transform duration-200"
-                style={{ backgroundColor: color.hexValue }}
+                className="group/swatch flex h-6 w-6 items-center justify-center flex-shrink-0"
                 title={color.name}
                 aria-label={`${product.title} in ${color.name}`}
-              />
+              >
+                <span
+                  className="block w-3 h-3 rounded-full border border-charcoal/10 transition-transform duration-200 group-hover/swatch:scale-125"
+                  style={{ backgroundColor: color.hexValue }}
+                />
+              </Link>
             ))}
             {product.roseColors.length > 6 && (
-              <span className="label-caps text-warm-gray">+{product.roseColors.length - 6}</span>
+              <span className="label-caps text-charcoal/70 ml-1">+{product.roseColors.length - 6}</span>
             )}
           </div>
         ) : null}

@@ -1,20 +1,21 @@
 import type { NextRequest } from 'next/server';
 import { sendEmail, ADMIN } from '@/lib/resend';
 import { contactAdminHtml } from '@/lib/emails';
+import { guardForm } from '@/lib/formGuard';
+import { contactSchema } from '@/lib/formSchemas';
 
 export async function POST(req: NextRequest) {
-  let name: string, email: string, subject: string, message: string;
-  try {
-    const body = await req.json();
-    name = String(body.name ?? '').trim();
-    email = String(body.email ?? '').trim();
-    subject = String(body.subject ?? '').trim();
-    message = String(body.message ?? '').trim();
-    if (!name || !email || !subject || !message) throw new Error();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error();
-  } catch {
-    return Response.json({ error: 'Please fill in all fields.' }, { status: 400 });
-  }
+  // Rate limit + honeypot + zod/content validation + Turnstile, all in one.
+  const guard = await guardForm({
+    req,
+    name: 'contact',
+    schema: contactSchema,
+    requireTurnstile: true,
+  });
+  if (guard.ok === 'spam') return Response.json({ ok: true }); // honeypot — drop silently
+  if (!guard.ok) return guard.response;
+
+  const { name, email, subject, message } = guard.data;
 
   await sendEmail({
     to: ADMIN,

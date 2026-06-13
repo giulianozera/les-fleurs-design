@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { HoneypotField } from '@/components/ui/HoneypotField';
 
 export type InquiryVariant = 'business' | 'interiors';
 
@@ -12,7 +13,7 @@ interface InquiryFormProps {
 export function InquiryForm({ variant }: InquiryFormProps) {
   const isInteriors = variant === 'interiors';
 
-  const [form, setForm] = useState({ name: '', email: '', company: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', company: '', message: '', company_website: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +51,7 @@ export function InquiryForm({ variant }: InquiryFormProps) {
         <h3 className="font-display text-2xl font-light text-charcoal mb-3">
           Thank you. We&rsquo;re in touch.
         </h3>
-        <p className="font-body text-sm text-warm-gray leading-[1.8]">
+        <p className="font-body text-sm text-charcoal/70 leading-[1.8]">
           We&rsquo;ll review your inquiry and reply within 1–2 business days.
         </p>
       </div>
@@ -69,7 +70,7 @@ export function InquiryForm({ variant }: InquiryFormProps) {
         },
       ].map(({ id, label, required, type }) => (
         <div key={id} className="flex flex-col gap-2">
-          <label htmlFor={`inquiry-${id}`} className="label-caps text-charcoal/60 text-[10px]">
+          <label htmlFor={`inquiry-${id}`} className="label-caps text-charcoal/75 text-[10px]">
             {label}{required && <span className="text-gold ml-1">*</span>}
           </label>
           <input
@@ -84,7 +85,7 @@ export function InquiryForm({ variant }: InquiryFormProps) {
       ))}
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="inquiry-message" className="label-caps text-charcoal/60 text-[10px]">
+        <label htmlFor="inquiry-message" className="label-caps text-charcoal/75 text-[10px]">
           Tell Us More<span className="text-gold ml-1">*</span>
         </label>
         <textarea
@@ -102,11 +103,18 @@ export function InquiryForm({ variant }: InquiryFormProps) {
         />
       </div>
 
-      {error && <p className="font-body text-xs text-red-500">{error}</p>}
+      <HoneypotField value={form.company_website} onChange={set('company_website')} />
+
+      {error && (
+        <p role="alert" className="font-body text-xs text-red-600">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"
         disabled={loading}
+        aria-busy={loading}
         className={cn(
           'h-12 label-caps transition-colors duration-300 mt-2',
           loading
@@ -117,7 +125,7 @@ export function InquiryForm({ variant }: InquiryFormProps) {
         {loading ? 'Sending…' : 'Submit Inquiry'}
       </button>
 
-      <p className="font-body text-xs text-warm-gray">
+      <p className="font-body text-xs text-charcoal/70">
         Or reach us at{' '}
         <a href="mailto:hello@lesfleursdesign.com" className="text-charcoal">
           hello@lesfleursdesign.com

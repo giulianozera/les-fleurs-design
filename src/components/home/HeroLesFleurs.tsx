@@ -253,8 +253,8 @@ export function HeroLesFleurs({
         </svg>
       </div>
 
-      {/* Wordmark logo */}
-      <motion.div
+      {/* Wordmark logo — serves as the page's h1 for correct heading order */}
+      <motion.h1
         className="mb-[2.5vh]"
         variants={fadeUpVariant(2.0)}
         initial={initial}
@@ -262,13 +262,13 @@ export function HeroLesFleurs({
       >
         <Image
           src="/les-fleurs-logo.png"
-          alt="Les Fleurs"
+          alt="Les Fleurs Design"
           width={1254}
           height={315}
           priority
           className="w-full max-w-[880px] h-auto mx-auto drop-shadow-[0_4px_24px_rgba(42,31,18,0.06)]"
         />
-      </motion.div>
+      </motion.h1>
 
       {/* Subhead */}
       <motion.p
@@ -308,10 +308,10 @@ export function HeroLesFleurs({
         initial={initial}
         animate="visible"
       >
-        <span className="font-body text-[10px] tracking-[0.4em] uppercase text-[#8a7a5e]">
+        <span className="font-body text-[10px] tracking-[0.4em] uppercase text-[#5a4530]">
           {scrollHintLabel}
         </span>
-        <div className="w-px h-7 bg-[#8a7a5e] opacity-50" />
+        <div className="w-px h-7 bg-[#5a4530] opacity-60" />
       </motion.div>
     </section>
   );

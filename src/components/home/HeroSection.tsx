@@ -30,7 +30,7 @@ export function HeroSection() {
       {/* Hero content */}
       <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 md:px-10 lg:px-16 pb-20 md:pb-28">
         <motion.p
-          className="label-caps text-ivory/60 mb-5"
+          className="label-caps text-ivory/80 mb-5 [text-shadow:0_1px_8px_rgba(0,0,0,0.6)]"
           custom={0.2}
           initial="hidden"
           animate="visible"
@@ -50,7 +50,7 @@ export function HeroSection() {
         </motion.h1>
 
         <motion.p
-          className="font-display text-lg md:text-xl font-light italic text-ivory/70 mt-5 mb-10 max-w-lg leading-relaxed"
+          className="font-display text-lg md:text-xl font-light italic text-ivory/90 mt-5 mb-10 max-w-lg leading-relaxed [text-shadow:0_1px_10px_rgba(0,0,0,0.55)]"
           custom={0.6}
           initial="hidden"
           animate="visible"
@@ -75,6 +75,7 @@ export function HeroSection() {
             <ArrowRight
               size={14}
               strokeWidth={1.5}
+              aria-hidden="true"
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
@@ -88,6 +89,7 @@ export function HeroSection() {
             <ArrowRight
               size={14}
               strokeWidth={1.5}
+              aria-hidden="true"
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </Link>
@@ -101,8 +103,8 @@ export function HeroSection() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4, duration: 0.8 }}
       >
-        <span className="label-caps text-ivory/35 [writing-mode:vertical-rl]">Scroll</span>
-        <div className="w-px h-10 bg-ivory/25 relative overflow-hidden">
+        <span className="label-caps text-ivory/70 [writing-mode:vertical-rl] [text-shadow:0_1px_8px_rgba(0,0,0,0.6)]">Scroll</span>
+        <div className="w-px h-10 bg-ivory/50 relative overflow-hidden">
           <motion.div
             className="absolute top-0 left-0 w-full bg-ivory/55"
             style={{ height: '40%' }}

@@ -50,7 +50,7 @@ export function FilterBar({
             'label-caps px-4 py-2 border transition-colors duration-200',
             !activeCollection
               ? 'border-charcoal bg-charcoal text-ivory'
-              : 'border-charcoal/20 text-warm-gray hover:border-charcoal hover:text-charcoal',
+              : 'border-charcoal/20 text-charcoal/70 hover:border-charcoal hover:text-charcoal',
           )}
         >
           All
@@ -68,7 +68,7 @@ export function FilterBar({
               'label-caps px-4 py-2 border transition-colors duration-200',
               activeCollection === col.slug.current
                 ? 'border-charcoal bg-charcoal text-ivory'
-                : 'border-charcoal/20 text-warm-gray hover:border-charcoal hover:text-charcoal',
+                : 'border-charcoal/20 text-charcoal/70 hover:border-charcoal hover:text-charcoal',
             )}
           >
             {col.title}
@@ -77,15 +77,15 @@ export function FilterBar({
 
         {/* Active filter count + clear */}
         <div className="ml-auto flex items-center gap-4">
-          <span className="label-caps text-warm-gray">
+          <span className="label-caps text-charcoal/70">
             {totalCount} {totalCount === 1 ? 'piece' : 'pieces'}
           </span>
           {hasFilters && (
             <button
               onClick={clearAll}
-              className="inline-flex items-center gap-1.5 label-caps text-warm-gray hover:text-charcoal transition-colors duration-200"
+              className="inline-flex items-center gap-1.5 label-caps text-charcoal/70 hover:text-charcoal transition-colors duration-200"
             >
-              <X size={11} strokeWidth={1.5} />
+              <X size={11} strokeWidth={1.5} aria-hidden="true" />
               Clear
             </button>
           )}

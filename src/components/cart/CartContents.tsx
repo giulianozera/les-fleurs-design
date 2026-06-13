@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { useCartStore, useCartSubtotal } from '@/store/cartStore';
-import { FREE_SHIPPING_THRESHOLD } from '@/lib/shipping';
+import { FREE_SHIPPING_THRESHOLD } from '@/lib/shippingConfig';
 
 export function CartContents() {
   const { items, removeItem, updateQuantity, clearCart } = useCartStore();
@@ -14,6 +14,7 @@ export function CartContents() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [agreed, setAgreed] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -22,12 +23,16 @@ export function CartContents() {
 
   async function handleCheckout() {
     setError(null);
+    if (!agreed) {
+      setError('Please agree to the Terms of Service and Privacy Policy to continue.');
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items, termsAccepted: true }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -201,6 +206,36 @@ export function CartContents() {
           {error && (
             <p className="font-body text-xs text-red-600 mb-4" role="alert">{error}</p>
           )}
+
+          <p className="font-body text-xs text-warm-gray mb-4">
+            Final sale — all sales are final.{' '}
+            <Link href="/shipping" className="underline hover:text-charcoal transition-colors duration-200">
+              See Shipping &amp; Returns
+            </Link>
+            .
+          </p>
+
+          <div className="flex items-start gap-3 mb-6">
+            <input
+              type="checkbox"
+              id="terms-consent"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              required
+              className="mt-0.5 h-4 w-4 flex-shrink-0 accent-charcoal cursor-pointer"
+            />
+            <label htmlFor="terms-consent" className="font-body text-xs text-warm-gray cursor-pointer">
+              I have read and agree to the{' '}
+              <Link href="/terms" className="underline hover:text-charcoal transition-colors duration-200">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy" className="underline hover:text-charcoal transition-colors duration-200">
+                Privacy Policy
+              </Link>
+              .
+            </label>
+          </div>
 
           <button
             onClick={handleCheckout}

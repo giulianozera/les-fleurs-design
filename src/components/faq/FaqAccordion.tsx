@@ -19,7 +19,7 @@ const FAQ_DATA: FaqSection[] = [
     items: [
       {
         q: 'How long do preserved roses last?',
-        a: 'With proper care, our preserved roses last 12–18 months or longer. They require no water, no sunlight, and minimal maintenance — simply keep them in a stable environment.',
+        a: 'Designed to last up to one year with proper care, kept away from direct sunlight and moisture — and often longer in a stable environment. They require no water and minimal maintenance.',
       },
       {
         q: 'How do I care for my arrangement?',
@@ -48,7 +48,7 @@ const FAQ_DATA: FaqSection[] = [
       },
       {
         q: 'Do you ship outside the United States?',
-        a: 'Currently we ship to all 50 US states only. International shipping is planned for 2025 — join our newsletter to be notified first.',
+        a: 'We currently ship to all 50 US states; international shipping is not yet available — join our newsletter to be notified.',
       },
       {
         q: 'How long before my order ships?',
@@ -60,7 +60,7 @@ const FAQ_DATA: FaqSection[] = [
       },
       {
         q: 'What is your return policy?',
-        a: 'Due to the perishable nature of preserved flowers, all sales are final. If your arrangement arrives damaged, contact us at hello@lesfleursdesign.com within 48 hours of receipt with photographs and we will arrange a replacement.',
+        a: 'Because each arrangement is made-to-order and individually finished, all sales are final. If your arrangement arrives damaged, contact us at hello@lesfleursdesign.com within 7 days of receipt with photographs and we will arrange a replacement.',
       },
       {
         q: 'How is my order packaged?',
@@ -101,7 +101,7 @@ export function FaqAccordion() {
                 className="border-b border-charcoal/10"
               >
                 <Accordion.Header>
-                  <Accordion.Trigger className="group flex w-full items-center justify-between py-5 text-left focus:outline-none">
+                  <Accordion.Trigger className="group flex w-full items-center justify-between py-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-charcoal/50">
                     <p className="font-body text-sm font-medium text-charcoal pr-8">{item.q}</p>
                     <ChevronRight
                       size={14}

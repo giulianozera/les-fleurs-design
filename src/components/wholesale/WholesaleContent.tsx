@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { HoneypotField } from '@/components/ui/HoneypotField';
 
 const VERTICALS = [
   {
@@ -20,7 +21,7 @@ const VERTICALS = [
 ];
 
 export function WholesaleContent() {
-  const [form, setForm] = useState({ name: '', email: '', company: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', company: '', message: '', company_website: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,18 +58,18 @@ export function WholesaleContent() {
       {/* Hero */}
       <section className="pt-[72px] bg-charcoal text-ivory">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-24 md:py-32">
-          <p className="label-caps text-ivory/40 mb-6">Wholesale & B2B</p>
+          <p className="label-caps text-ivory/70 mb-6">Wholesale & B2B</p>
           <h1 className="font-display text-[clamp(3rem,7vw,6rem)] font-light leading-[0.95] max-w-2xl">
             Built for Business.
           </h1>
-          <p className="font-body text-sm text-ivory/60 leading-[1.8] mt-8 max-w-md">
+          <p className="font-body text-sm text-ivory/80 leading-[1.8] mt-8 max-w-md">
             Partner programs for hotels, retailers, florists, and interior designers who demand permanence without compromise.
           </p>
           {/* Navigation to dedicated pages */}
           <div className="flex flex-wrap gap-6 mt-10">
             <Link
               href="/interiors"
-              className="label-caps text-ivory/40 hover:text-ivory transition-colors duration-300 inline-flex items-center gap-1.5"
+              className="label-caps text-ivory/75 hover:text-ivory transition-colors duration-300 inline-flex items-center gap-1.5"
             >
               For Interiors <span aria-hidden="true">→</span>
             </Link>
@@ -83,7 +84,7 @@ export function WholesaleContent() {
             <div key={v.title}>
               <div className="w-8 h-px bg-gold mb-6" />
               <h3 className="font-display text-xl font-light text-charcoal mb-3">{v.title}</h3>
-              <p className="font-body text-sm text-warm-gray leading-[1.8]">{v.body}</p>
+              <p className="font-body text-sm text-charcoal/75 leading-[1.8]">{v.body}</p>
             </div>
           ))}
         </div>
@@ -95,7 +96,7 @@ export function WholesaleContent() {
 
           {/* Left: inquiry form */}
           <div>
-            <p className="label-caps text-warm-gray mb-4">Partner Inquiry</p>
+            <p className="label-caps text-charcoal/70 mb-4">Partner Inquiry</p>
             <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-light text-charcoal mb-10 leading-tight">
               Tell us about your project.
             </h2>
@@ -106,7 +107,7 @@ export function WholesaleContent() {
                 <h3 className="font-display text-2xl font-light text-charcoal mb-3">
                   Thank you. We're in touch.
                 </h3>
-                <p className="font-body text-sm text-warm-gray leading-[1.8] mb-6">
+                <p className="font-body text-sm text-charcoal/70 leading-[1.8] mb-6">
                   We'll review your inquiry and reply within 1–2 business days. Or book a call directly below.
                 </p>
               </div>
@@ -118,7 +119,7 @@ export function WholesaleContent() {
                   { id: 'company', label: 'Company / Brand', required: false },
                 ].map(({ id, label, required, type }) => (
                   <div key={id} className="flex flex-col gap-2">
-                    <label htmlFor={id} className="label-caps text-charcoal/60 text-[10px]">
+                    <label htmlFor={id} className="label-caps text-charcoal/75 text-[10px]">
                       {label}{required && <span className="text-gold ml-1">*</span>}
                     </label>
                     <input
@@ -133,7 +134,7 @@ export function WholesaleContent() {
                 ))}
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="message" className="label-caps text-charcoal/60 text-[10px]">
+                  <label htmlFor="message" className="label-caps text-charcoal/75 text-[10px]">
                     Tell Us More<span className="text-gold ml-1">*</span>
                   </label>
                   <textarea
@@ -147,7 +148,13 @@ export function WholesaleContent() {
                   />
                 </div>
 
-                {error && <p className="font-body text-xs text-red-500">{error}</p>}
+                <HoneypotField value={form.company_website} onChange={set('company_website')} />
+
+                {error && (
+                  <p role="alert" className="font-body text-xs text-red-600">
+                    {error}
+                  </p>
+                )}
 
                 <button
                   type="submit"
@@ -167,7 +174,7 @@ export function WholesaleContent() {
 
           {/* Right: Cal.com */}
           <div className="mt-16 lg:mt-0">
-            <p className="label-caps text-warm-gray mb-4">Or Book a Call</p>
+            <p className="label-caps text-charcoal/70 mb-4">Or Book a Call</p>
             <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-light text-charcoal mb-10 leading-tight">
               Speak with us directly.
             </h2>

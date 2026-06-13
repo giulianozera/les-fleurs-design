@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { HoneypotField } from '@/components/ui/HoneypotField';
+import { Turnstile, type TurnstileHandle } from '@/components/ui/Turnstile';
 
 const SUBJECTS = [
   'General Inquiry',
@@ -12,10 +14,18 @@ const SUBJECTS = [
 ];
 
 export function ContactForm() {
-  const [form, setForm] = useState({ name: '', email: '', subject: SUBJECTS[0], message: '' });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    subject: SUBJECTS[0],
+    message: '',
+    company_website: '', // honeypot
+  });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   function set(field: keyof typeof form) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
@@ -30,7 +40,7 @@ export function ContactForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, turnstileToken }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Submission failed.');
@@ -39,6 +49,8 @@ export function ContactForm() {
       setError(err instanceof Error ? err.message : 'Something went wrong.');
     } finally {
       setLoading(false);
+      // Turnstile tokens are single-use — get a fresh one for any retry.
+      turnstileRef.current?.reset();
     }
   }
 
@@ -46,18 +58,23 @@ export function ContactForm() {
     <div className="bg-ivory min-h-screen pt-[72px]">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16 py-20">
         <div className="max-w-xl">
-          <p className="label-caps text-warm-gray mb-4">Contact</p>
+          <p className="label-caps text-charcoal/70 mb-4">Contact</p>
           <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-light text-charcoal leading-tight mb-12">
             Get in Touch.
           </h1>
 
           {success ? (
-            <div className="border border-charcoal/10 p-10">
+            <div
+              className="border border-charcoal/10 p-10"
+              role="status"
+              tabIndex={-1}
+              ref={(el) => el?.focus()}
+            >
               <div className="w-8 h-px bg-gold mb-6" />
               <h2 className="font-display text-3xl font-light text-charcoal mb-3">
                 Message sent.
               </h2>
-              <p className="font-body text-sm text-warm-gray leading-[1.8]">
+              <p className="font-body text-sm text-charcoal/70 leading-[1.8]">
                 We've received your message and will get back to you within 1–2 business days. You can also reach us directly at{' '}
                 <a href="mailto:hello@lesfleursdesign.com" className="text-charcoal underline underline-offset-4">
                   hello@lesfleursdesign.com
@@ -72,7 +89,7 @@ export function ContactForm() {
                   { id: 'email', label: 'Email Address', type: 'email' },
                 ].map(({ id, label, type }) => (
                   <div key={id} className="flex flex-col gap-2">
-                    <label htmlFor={id} className="label-caps text-charcoal/60 text-[10px]">
+                    <label htmlFor={id} className="label-caps text-charcoal/75 text-[10px]">
                       {label}<span className="text-gold ml-1">*</span>
                     </label>
                     <input
@@ -88,7 +105,7 @@ export function ContactForm() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="subject" className="label-caps text-charcoal/60 text-[10px]">
+                <label htmlFor="subject" className="label-caps text-charcoal/75 text-[10px]">
                   Subject<span className="text-gold ml-1">*</span>
                 </label>
                 <select
@@ -104,7 +121,7 @@ export function ContactForm() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="message" className="label-caps text-charcoal/60 text-[10px]">
+                <label htmlFor="message" className="label-caps text-charcoal/75 text-[10px]">
                   Message<span className="text-gold ml-1">*</span>
                 </label>
                 <textarea
@@ -117,7 +134,17 @@ export function ContactForm() {
                 />
               </div>
 
-              {error && <p className="font-body text-xs text-red-500">{error}</p>}
+              <HoneypotField
+                value={form.company_website}
+                onChange={set('company_website')}
+              />
+              <Turnstile ref={turnstileRef} onToken={setTurnstileToken} />
+
+              {error && (
+                <p role="alert" className="font-body text-xs text-red-600">
+                  {error}
+                </p>
+              )}
 
               <button
                 type="submit"
@@ -132,7 +159,7 @@ export function ContactForm() {
                 {loading ? 'Sending…' : 'Send Message'}
               </button>
 
-              <p className="font-body text-xs text-warm-gray">
+              <p className="font-body text-xs text-charcoal/70">
                 Or email us directly at{' '}
                 <a href="mailto:hello@lesfleursdesign.com" className="text-charcoal">
                   hello@lesfleursdesign.com

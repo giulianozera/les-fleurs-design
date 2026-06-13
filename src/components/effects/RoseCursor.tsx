@@ -8,6 +8,11 @@ export function RoseCursor() {
   const rafId = useRef(0);
   const [visible, setVisible] = useState(false);
   const [hovering, setHovering] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }, []);
 
   useEffect(() => {
     // Disable on touch-only devices
@@ -61,7 +66,9 @@ export function RoseCursor() {
       <div
         style={{
           transform: `translate(-50%, -50%) scale(${hovering ? 1.5 : 1})`,
-          transition: 'transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)',
+          transition: reducedMotion
+            ? 'none'
+            : 'transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)',
         }}
       >
         {/* Top-down rose — 5 petals + center */}

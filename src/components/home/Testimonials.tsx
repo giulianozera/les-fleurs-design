@@ -2,26 +2,17 @@
 
 import { motion } from 'framer-motion';
 
-const testimonials = [
-  {
-    id: 1,
-    quote: 'The most beautiful object in my apartment. Guests always ask about it — and it still looks as perfect as the day it arrived.',
-    author: 'Isabelle M.',
-    location: 'New York, NY',
-  },
-  {
-    id: 2,
-    quote: 'We ordered twelve arrangements for our hotel lobby. The quality is extraordinary and they have required zero maintenance over eight months.',
-    author: 'Laurent P.',
-    location: 'Miami, FL',
-  },
-  {
-    id: 3,
-    quote: 'A single bloom. Exactly as described. The ceramic vessel is a work of art in its own right. I ordered three more as gifts.',
-    author: 'Claire S.',
-    location: 'Los Angeles, CA',
-  },
-];
+// Invented placeholder testimonials were removed — do not ship fabricated
+// customer quotes/names. This component is currently unused (dead code);
+// TODO: source real, attributable customer testimonials before re-enabling.
+interface Testimonial {
+  id: number;
+  quote: string;
+  author: string;
+  location: string;
+}
+
+const testimonials: Testimonial[] = [];
 
 const stagger = {
   visible: { transition: { staggerChildren: 0.14 } },
@@ -49,7 +40,7 @@ export function Testimonials() {
           viewport={{ once: true, margin: '-80px' }}
           variants={stagger}
         >
-          <motion.p className="label-caps text-ivory/30 mb-3" variants={fadeUp}>
+          <motion.p className="label-caps text-ivory/60 mb-3" variants={fadeUp}>
             What Our Clients Say
           </motion.p>
           <motion.h2 className="font-display text-[clamp(2rem,4vw,3.5rem)] font-light text-ivory" variants={fadeUp}>
@@ -72,13 +63,13 @@ export function Testimonials() {
               className="border-t border-ivory/10 pt-8"
             >
               {/* Quote mark */}
-              <span className="font-display text-5xl text-warm-gray/40 leading-none select-none">&ldquo;</span>
+              <span className="font-display text-5xl text-warm-gray/40 leading-none select-none" aria-hidden="true">&ldquo;</span>
               <p className="font-display text-xl md:text-2xl font-light italic text-ivory/80 leading-relaxed mt-1 mb-6">
                 {t.quote}
               </p>
               <div>
                 <p className="font-body text-sm font-medium text-ivory">{t.author}</p>
-                <p className="label-caps text-ivory/30 mt-1">{t.location}</p>
+                <p className="label-caps text-ivory/60 mt-1">{t.location}</p>
               </div>
             </motion.div>
           ))}
