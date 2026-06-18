@@ -3,24 +3,8 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-
-const collections = [
-  {
-    slug: 'eternal-edit',
-    title: 'The Eternal Edit',
-    description: 'Our most sought-after arrangements. Timeless forms, enduring beauty.',
-  },
-  {
-    slug: 'maison',
-    title: 'Maison Collection',
-    description: 'Architectural vessels. Roses selected for their quietude.',
-  },
-  {
-    slug: 'signature',
-    title: 'The Signature Series',
-    description: 'Our signature hand-formed ceramics. One-of-a-kind, never repeated.',
-  },
-];
+import { ForHerSlider, type SliderImage } from './ForHerSlider';
+import { featuredCollections as collections } from './featuredCollections.data';
 
 const stagger = {
   visible: {
@@ -37,7 +21,11 @@ const fadeUp = {
   },
 };
 
-export function FeaturedCollections() {
+export function FeaturedCollections({
+  collectionImages = {},
+}: {
+  collectionImages?: Record<string, SliderImage[]>;
+}) {
   return (
     <section className="py-24 md:py-32 mx-auto max-w-[1400px] px-6 md:px-10 lg:px-16">
 
@@ -78,10 +66,16 @@ export function FeaturedCollections() {
       >
         {collections.map((col) => (
           <motion.div key={col.slug} variants={fadeUp}>
-            <Link href={`/shop?collection=${col.slug}`} className="group block">
-              {/* Image container — 4:5 portrait */}
+            <Link
+              href={`/shop?collection=${col.slug}`}
+              aria-label={`Shop the ${col.title} collection`}
+              className="group block"
+            >
+              {/* Image container — 4:5 portrait. Auto-advancing carousel of the
+                  collection's pieces; tapping anywhere opens the collection.
+                  priority={false}: below the fold, so it must not preempt the hero LCP. */}
               <div className="relative w-full overflow-hidden bg-ivory-dark flex items-center justify-center" style={{ aspectRatio: '4/5' }}>
-                <p className="label-caps text-charcoal/55 tracking-widest">Coming Soon</p>
+                <ForHerSlider images={collectionImages[col.slug] ?? []} priority={false} />
               </div>
               {/* Caption */}
               <div className="mt-4 flex items-start justify-between">

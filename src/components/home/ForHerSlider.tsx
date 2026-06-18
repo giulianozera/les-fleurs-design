@@ -8,7 +8,14 @@ export interface SliderImage {
   alt: string;
 }
 
-export function ForHerSlider({ images }: { images: SliderImage[] }) {
+export function ForHerSlider({
+  images,
+  priority = true,
+}: {
+  images: SliderImage[];
+  /** Preload the first slide. Disable for below-the-fold sliders to protect LCP. */
+  priority?: boolean;
+}) {
   const [index, setIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -43,7 +50,7 @@ export function ForHerSlider({ images }: { images: SliderImage[] }) {
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
           unoptimized
-          priority={i === 0}
+          priority={priority && i === 0}
           className={`object-cover transition-opacity duration-[1200ms] ease-in-out ${
             i === index ? 'opacity-100' : 'opacity-0'
           }`}

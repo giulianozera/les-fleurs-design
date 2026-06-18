@@ -177,6 +177,43 @@ export async function getMaisonImages(): Promise<{ url: string; alt: string }[]>
   return safeFetch<{ url: string; alt: string }[]>(query, {}, []);
 }
 
+// ── Featured collection carousels (homepage) ──────────────────────────────────
+
+/**
+ * For each given collection slug, returns up to 8 representative product images
+ * (one per product, featured first) for the homepage collection carousels.
+ * Keyed by collection slug; collections with no usable images map to [].
+ *
+ * URLs carry Sanity CDN transform params (`w`/`auto=format`/`q`) so the carousels
+ * serve ~900px modern-format images instead of the multi-MB full-res originals.
+ */
+export async function getFeaturedCollectionImages(
+  slugs: string[],
+): Promise<Record<string, { url: string; alt: string }[]>> {
+  const query = groq`
+    *[_type == "collection" && slug.current in $slugs]{
+      "slug": slug.current,
+      "images": *[_type == "product" && references(^._id) && defined(images[0].asset)]
+        | order(featured desc, _createdAt desc)[0...8]{
+          "url": images[0].asset->url + "?w=900&auto=format&q=70",
+          "alt": coalesce(images[0].alt, title),
+        }
+    }
+  `;
+  const rows = await safeFetch<{ slug: string; images: { url: string; alt: string }[] }[]>(
+    query,
+    { slugs },
+    [],
+  );
+  // Dedupe by url so shared product imagery can't produce duplicate React keys.
+  return Object.fromEntries(
+    rows.map((row) => [
+      row.slug,
+      row.images.filter((img, i, arr) => arr.findIndex((x) => x.url === img.url) === i),
+    ]),
+  );
+}
+
 // ── Homepage Hero ─────────────────────────────────────────────────────────────
 
 const HERO_DEFAULTS: HomepageHero = {
