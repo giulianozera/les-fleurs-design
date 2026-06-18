@@ -141,6 +141,19 @@ export async function POST(req: NextRequest) {
       })),
       shipping_address_collection: { allowed_countries: ['US'] },
       phone_number_collection: { enabled: true },
+      // Require an apartment / suite / unit so packages aren't undeliverable.
+      // Stripe's address "line 2" is always optional and can't be forced, so we
+      // collect it as a REQUIRED custom field; single-family homes enter "N/A".
+      // The webhook normalizes the value and writes it to the shipping label.
+      custom_fields: [
+        {
+          key: 'apartment',
+          label: { type: 'custom', custom: 'Apartment / suite / unit (type N/A if none)' },
+          type: 'text',
+          optional: false,
+          text: { maximum_length: 100 },
+        },
+      ],
       shipping_options: shippingOptions,
       success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/cart`,

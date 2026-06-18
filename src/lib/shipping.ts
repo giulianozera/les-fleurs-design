@@ -61,6 +61,7 @@ export interface LabelResult {
 export async function createShippingLabel(opts: {
   toName: string;
   toStreet1: string;
+  toStreet2?: string;
   toCity: string;
   toState: string;
   toZip: string;
@@ -75,6 +76,7 @@ export async function createShippingLabel(opts: {
     to_address: {
       name: opts.toName,
       street1: opts.toStreet1,
+      street2: opts.toStreet2 || undefined,
       city: opts.toCity,
       state: opts.toState,
       zip: opts.toZip,

@@ -69,6 +69,18 @@ export async function POST(req: NextRequest) {
     const customerName = shippingName ?? session.customer_details?.name ?? null;
     const customerEmail = session.customer_details?.email;
     const addr = session.collected_information?.shipping_details?.address ?? null;
+
+    // Apartment / unit is collected as a REQUIRED custom field at checkout
+    // (Stripe's address line2 is always optional). Treat "N/A"/blank as "no
+    // apartment", and fall back to any line2 Stripe happened to capture. This
+    // value becomes the label's street2 and is merged into the saved order.
+    const aptField = session.custom_fields?.find((f) => f.key === 'apartment')?.text?.value ?? '';
+    const aptClean = aptField.trim();
+    const apt =
+      aptClean && !/^(n\.?\/?a\.?|none|no|nil|-)$/i.test(aptClean)
+        ? aptClean
+        : addr?.line2?.trim() || null;
+    const shippingAddress = addr ? { ...addr, line2: apt } : null;
     let items: OrderItemPayload[] = [];
     try {
       items = session.metadata?.items ? JSON.parse(session.metadata.items) : [];
@@ -90,7 +102,7 @@ export async function POST(req: NextRequest) {
             stripe_payment_intent_id: session.payment_intent as string | null,
             customer_email: customerEmail ?? '',
             customer_name: customerName,
-            shipping_address: addr ?? null,
+            shipping_address: shippingAddress,
             subtotal_cents: session.amount_subtotal ?? 0,
             shipping_cents: session.total_details?.amount_shipping ?? 0,
             total_cents: session.amount_total ?? 0,
@@ -139,6 +151,7 @@ export async function POST(req: NextRequest) {
         label = await createShippingLabel({
           toName: customerName ?? 'Customer',
           toStreet1: addr.line1,
+          toStreet2: apt ?? undefined,
           toCity: addr.city,
           toState: addr.state,
           toZip: addr.postal_code,
@@ -186,7 +199,7 @@ export async function POST(req: NextRequest) {
         customerPhone: session.customer_details?.phone ?? null,
         items,
         totalCents: session.amount_total ?? 0,
-        shippingAddress: addr,
+        shippingAddress,
         label: label ?? undefined,
         trackingUrl: track,
       };
